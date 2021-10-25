@@ -29,24 +29,26 @@ public class GameBoard {
     private int point;
     private Friend[][] board;
     private ArrayList<Friend> friendsArrayList; // 보드에 만들에 만든어진 Friends 기억, 처음엔 HashSet으로 했지만 순서가 중요하다는 것을 깨닫고 ArrayList씀
-    private Point[] latestMovedPosition;
+    private Friend[] latestMovedFriends;
     private LinkedList<Friend> LLFromVerifiedTmpBoard;
 
     //for test
     private int previousPoint;
 
     /* 게임보드의 Canvas 상 left - top 좌표*/
-    private int defaultX;
-    private int defaultY;
+    private static int defaultX;
+    private static int defaultY;
+
+    static {
+        defaultX = 0 + 4 * CanvasGameOp.getDw();
+        defaultY = 0 + 4 * CanvasGameOp.getDh();
+    }
 
     private GameBoard() {
         board = new Friend[BOARD_LENGTH][BOARD_LENGTH];
         friendsArrayList = new ArrayList<>();
-        latestMovedPosition = new Point[2];
+        latestMovedFriends = new Friend[2];
         LLFromVerifiedTmpBoard = new LinkedList<>();
-
-        defaultX = 0 + 4 * CanvasGameOp.getDw();
-        defaultY = 0 + 4 * CanvasGameOp.getDh();
     }
 
     public static GameBoard getInstance() {
@@ -56,6 +58,7 @@ public class GameBoard {
     }
 
     public static void reset() {
+        instance.board = null;
         instance = null;
     }
 
@@ -72,27 +75,21 @@ public class GameBoard {
         return point;
     }
 
-    public int getDefaultX() {
+    public static int getDefaultX() {
         return defaultX;
     }
 
-    public int getDefaultY() {
+    public static int getDefaultY() {
         return defaultY;
     }
 
     public void update() {
-        if (latestMovedPosition[0] != null
-                && latestMovedPosition[1] != null
+        if (latestMovedFriends[0] != null
+                && latestMovedFriends[1] != null
                 && !checkValidMoving()) {
-            Point p1 = latestMovedPosition[0];
-            Point p2 = latestMovedPosition[1];
-            Friend f1 = board[(int)p1.getY()][(int)p1.getX()];
-            Friend f2 = board[(int)p2.getY()][(int)p2.getX()];
-            f1.moveTo(f2);
-            f2.moveTo(f1);
-            swap(p1, p2);
+            swap(latestMovedFriends[0], latestMovedFriends[1]);
         }
-        latestMovedPosition = new Point[2];
+        latestMovedFriends = new Friend[2];
 
         int removedCount = remove();
         addPoints(removedCount);
@@ -150,31 +147,28 @@ public class GameBoard {
             }
     }
 
-    public void swap(Point p1, Point p2) {
-        int x1 = (int)p1.getX();
-        int y1 = (int)p1.getY();
-        int x2 = (int)p2.getX();
-        int y2 = (int)p2.getY();
+    public void swap(Friend f1, Friend f2) {
+        f1.moveTo(f2);
+        f2.moveTo(f1);
+
+        int x1 = f1.getBoardX();
+        int y1 = f1.getBoardY();
+        int x2 = f2.getBoardX();
+        int y2 = f2.getBoardY();
 
 
         Friend tmp = board[y1][x1];
         board[y1][x1] = board[y2][x2];
         board[y2][x2] = tmp;
 
-        Friend f1 = board[y1][x1];
-        if (f1 != null) {
-            f1.setBoardX(x1);
-            f1.setBoardY(y1);
-        }
+        f1.setBoardX(x2);
+        f1.setBoardY(y2);
 
-        Friend f2 = board[y2][x2];
-        if (f2 != null) {
-            f2.setBoardX(x2);
-            f2.setBoardY(y2);
-        }
+        f2.setBoardX(x1);
+        f2.setBoardY(y1);
 
-        latestMovedPosition[0] = p1;
-        latestMovedPosition[1] = p2;
+        latestMovedFriends[0] = f1;
+        latestMovedFriends[1] = f2;
     }
 
     private Friend getElementRandomly(int x, int y) {
@@ -253,8 +247,10 @@ public class GameBoard {
 
     /* obj가 교환했을 때 움직임이 타당한지(돌이 3개이상 배치가 되었는지) 체크해서 배치가 되었으면 참값을 반환*/
     private boolean checkValidMoving() {
-        Point p1 = latestMovedPosition[0];
-        Point p2 = latestMovedPosition[1];
+        Friend f1 = latestMovedFriends[0];
+        Friend f2 = latestMovedFriends[1];
+        Point p1 = new Point(f1.getBoardX(), f1.getBoardY());
+        Point p2 = new Point(f2.getBoardX(), f2.getBoardY());
         return isRemovableHorizontal(p1) || isRemovableVertical(p1) || isRemovableHorizontal(p2) || isRemovableVertical(p2);
     }
 

@@ -26,8 +26,8 @@ public abstract class Friend {
 
         int dw = CanvasGameOp.getDw();
         int dh = CanvasGameOp.getDh();
-        int defaultX = GameBoard.getInstance().getDefaultX();
-        int defaultY = GameBoard.getInstance().getDefaultY();
+        int defaultX = GameBoard.getDefaultX();
+        int defaultY = GameBoard.getDefaultY();
 
         canvasX = defaultX + boardX * 2 * dw;
         canvasY = defaultY + boardY * 2 * dh;

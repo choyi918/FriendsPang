@@ -201,6 +201,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
                     CanvasMain.getInstance().setVisible(true);
                     CanvasGameOp.this.setVisible(false);
                     /* Game을 초기화 하는 코드*/
+                    bRunning = false;
                     reset();
                 }
                 else if (0 + 16 * dh <= mouseX && mouseX <= 0 + 20 * dh) {
@@ -330,11 +331,9 @@ public class CanvasGameOp extends Canvas implements Runnable {
 
             Friend f1 = gameBoard.getBoard()[boardY1][boardX1];
             Friend f2 = gameBoard.getBoard()[boardY2][boardX2];
-            f1.moveTo(f2);
-            f2.moveTo(f1);
             gameBoard.printBoardForTest();
+            gameBoard.swap(f1, f2);
             playSound("move_friend.wav");
-            gameBoard.swap(new Point(f1.getBoardX(), f1.getBoardY()), new Point(f2.getBoardX(), f2.getBoardY()));
             initializePressedAndReleasedXY();
         }
 
