@@ -9,6 +9,7 @@ import com.young.game.objects.Friends.Muzi;
 import com.young.game.objects.Friends.Neo;
 import com.young.game.objects.Friends.Ryan;
 import com.young.game.objects.Friends.Tube;
+import com.young.game.ui.CanvasGameOp;
 import com.young.game.ui.CanvasMain;
 
 import javax.sound.sampled.AudioInputStream;
@@ -34,10 +35,6 @@ public class GameBoard {
     //for test
     private int previousPoint;
 
-    /*Canvas 22등분 한 후 단위 길이  */
-    private int dw;
-    private int dh;
-
     /* 게임보드의 Canvas 상 left - top 좌표*/
     private int defaultX;
     private int defaultY;
@@ -48,12 +45,8 @@ public class GameBoard {
         latestMovedPosition = new Point[2];
         LLFromVerifiedTmpBoard = new LinkedList<>();
 
-        int obW = CanvasMain.getInstance().getWidth();
-        int obH = CanvasMain.getInstance().getHeight();
-        dw = obW / 22;
-        dh = obH / 22;
-        defaultX = 0 + 4 * dw;
-        defaultY = 0 + 4 * dh;
+        defaultX = 0 + 4 * CanvasGameOp.getDw();
+        defaultY = 0 + 4 * CanvasGameOp.getDh();
     }
 
     public static GameBoard getInstance() {
@@ -77,14 +70,6 @@ public class GameBoard {
 
     public int getPoint() {
         return point;
-    }
-
-    public int getDw() {
-        return dw;
-    }
-
-    public int getDh() {
-        return dh;
     }
 
     public int getDefaultX() {
@@ -121,6 +106,9 @@ public class GameBoard {
     }
 
     public void draw(Graphics g) {
+        int dw = CanvasGameOp.getDw();
+        int dh = CanvasGameOp.getDh();
+
         g.setColor(Color.BLACK);
         g.fillRect(defaultX, defaultY, 7 * 2 * dw, 7 * 2 * dh);
         for (int y = 0; y < BOARD_LENGTH; y++)
@@ -570,6 +558,8 @@ public class GameBoard {
     /* 3개 이상의 연속 배치가 없고, 답이 있는 보드를 검증하여 판을 새로 갱신할 때 씀 - 1. 처음 게임을 시작할때 2. 답이 없는경우 판을 다시 갱신할 때 */
     public void initializeToVerifiedBoard() {
         Friend[][] tmpBoard = initializeTmpBoard();
+
+        int dw = CanvasGameOp.getDw();
 
         for (int y = 0; y < BOARD_LENGTH; y++) {
             for (int x = 0; x < BOARD_LENGTH; x++) {

@@ -3,17 +3,12 @@ package com.young.game.objects.Friends;
 import com.young.game.objects.GameBoard;
 import com.young.game.ui.CanvasGameOp;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import java.awt.*;
-import java.io.File;
 
 public abstract class Friend {
     private String name;
     private Image image;
-    private GameBoard inBoard;
-    private int speed;
+    private int movingSpeed;
     private int boardX;
     private int boardY;
     private int canvasX;
@@ -25,15 +20,14 @@ public abstract class Friend {
         this.boardX = boardX;
         this.boardY = boardY;
         this.name = name;
-        speed = 10;
+        movingSpeed = 10;
         image = Toolkit.getDefaultToolkit().getImage(String.format("res/images/%s", imageFileName));
 
-        inBoard = GameBoard.getInstance();
 
-        int dw = inBoard.getDw();
-        int dh = inBoard.getDh();
-        int defaultX = inBoard.getDefaultX();
-        int defaultY = inBoard.getDefaultY();
+        int dw = CanvasGameOp.getDw();
+        int dh = CanvasGameOp.getDh();
+        int defaultX = GameBoard.getInstance().getDefaultX();
+        int defaultY = GameBoard.getInstance().getDefaultY();
 
         canvasX = defaultX + boardX * 2 * dw;
         canvasY = defaultY + boardY * 2 * dh;
@@ -52,14 +46,6 @@ public abstract class Friend {
 
     public int getBoardY() {
         return boardY;
-    }
-
-    public int getCanvasX() {
-        return canvasX;
-    }
-
-    public int getCanvasY() {
-        return canvasY;
     }
 
     /* setters */
@@ -89,6 +75,8 @@ public abstract class Friend {
 
     /* implemented in Canvas Thread*/
     public void update() {
+        GameBoard inBoard = GameBoard.getInstance();
+
         if (boardY != inBoard.getBoard().length - 1 && inBoard.getBoard()[boardY + 1][boardX] == null)
             slideDown();
         else
@@ -99,8 +87,8 @@ public abstract class Friend {
     public void draw(Graphics g) {
         CanvasGameOp observer = CanvasGameOp.getInstance();
 
-        int dw = inBoard.getDw();
-        int dh = inBoard.getDh();
+        int dw = CanvasGameOp.getDw();
+        int dh = CanvasGameOp.getDh();
 
         g.drawImage(image, canvasX, canvasY, 2 * dw, 2 * dh, observer);
     }
@@ -113,8 +101,9 @@ public abstract class Friend {
     public void moveTo(Friend friend) {
         int fBoardX = friend.getBoardX();
         int fBoardY = friend.getBoardY();
-        int dw = inBoard.getDw();
-        int dh = inBoard.getDh();
+        int dw = CanvasGameOp.getDw();
+        int dh = CanvasGameOp.getDh();
+        GameBoard inBoard = GameBoard.getInstance();
 
         if ((boardY < inBoard.getBoard().length - 1 && boardX == fBoardX && boardY + 1 == fBoardY)
                 || (boardY > 0 && boardX == fBoardX && boardY - 1 == fBoardY))
@@ -127,11 +116,12 @@ public abstract class Friend {
     }
 
     private void slideDown() {
+        GameBoard inBoard = GameBoard.getInstance();
         Friend[][] board = inBoard.getBoard();
         int defaultY = inBoard.getDefaultY();
-        int dh = inBoard.getDh();
+        int dh = CanvasGameOp.getDh();
 
-        for (int i = 0; i < speed; i++) {
+        for (int i = 0; i < movingSpeed; i++) {
             canvasY += 1;
             if (canvasY == defaultY + (boardY + 1) * 2 * dh) {
                 board[boardY][boardX] = null;
@@ -145,7 +135,7 @@ public abstract class Friend {
     }
 
     private void move() {
-        for (int i = 0; i < speed; i++) {
+        for (int i = 0; i < movingSpeed; i++) {
             if (canvasX < validCanvasX)
                 canvasX += 1;
             else if (canvasX > validCanvasX)
@@ -159,21 +149,6 @@ public abstract class Friend {
                 canvasY -= 1;
             else
                 setValidCanvasY(canvasY);
-        }
-    }
-
-    private void playSound(String fileName) {
-        try
-        {
-            AudioInputStream ais = AudioSystem.getAudioInputStream(new File(String.format("res/effectSound/%s", fileName)));
-            Clip clip = AudioSystem.getClip();
-            clip.stop();
-            clip.open(ais);
-            clip.start();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
         }
     }
 }
