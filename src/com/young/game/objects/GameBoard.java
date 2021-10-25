@@ -30,7 +30,6 @@ public class GameBoard {
     private ArrayList<Friend> friendsArrayList; // 보드에 만들에 만든어진 Friends 기억, 처음엔 HashSet으로 했지만 순서가 중요하다는 것을 깨닫고 ArrayList씀
     private Point[] latestMovedPosition;
     private LinkedList<Friend> LLFromVerifiedTmpBoard;
-    private boolean[] bLineFullsForPlaySound;
 
     //for test
     private int previousPoint;
@@ -44,8 +43,6 @@ public class GameBoard {
     private int defaultY;
 
     private GameBoard() {
-        bLineFullsForPlaySound = new boolean[7];
-
         board = new Friend[BOARD_LENGTH][BOARD_LENGTH];
         friendsArrayList = new ArrayList<>();
         latestMovedPosition = new Point[2];
@@ -717,37 +714,4 @@ public class GameBoard {
         }
     }
 
-    public void playSoundWhenLineIsFilled() {
-        for (int y = 0; y < 7; y++)
-            isFullThisLine(6 - y);
-    }
-
-    private void isFullThisLine(int y) {
-        for (int x = 0; x < BOARD_LENGTH; x++) {
-            if (board[y][x] == null) {
-                bLineFullsForPlaySound[y] = false;
-                return;
-            }
-        }
-
-        if (bLineFullsForPlaySound[y] == false) {
-            playSound("alter_end.wav");
-            bLineFullsForPlaySound[y] = true;
-        }
-    }
-
-    private void playSound(String fileName) {
-        try
-        {
-            AudioInputStream ais = AudioSystem.getAudioInputStream(new File(String.format("res/effectSound/%s", fileName)));
-            Clip clip = AudioSystem.getClip();
-            clip.stop();
-            clip.open(ais);
-            clip.start();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
 }

@@ -138,8 +138,6 @@ public class CanvasGameOp extends Canvas implements Runnable {
                 for (Friend f : gameBoard.getFriendsArrayList())
                     f.update();
 
-//                gameBoard.playSoundWhenLineIsFilled();
-
                 /* 49개 다 꽉 차고, Friends들이 다 제자리에 온전히 위치한 상태에서만 실행되도록.*/
                 if (isAllCompleteToMove() && gameBoard.isFull()) {
                     gameBoard.update();
@@ -335,7 +333,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
             f1.moveTo(f2);
             f2.moveTo(f1);
             gameBoard.printBoardForTest();
-//            playSound("move_friend.wav");
+            playSound("move_friend.wav");
             gameBoard.swap(new Point(f1.getBoardX(), f1.getBoardY()), new Point(f2.getBoardX(), f2.getBoardY()));
             initializePressedAndReleasedXY();
         }
