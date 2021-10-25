@@ -75,10 +75,8 @@ public abstract class Friend {
 
     /* implemented in Canvas Thread*/
     public void update() {
-        GameBoard inBoard = GameBoard.getInstance();
-
-        if (boardY != inBoard.getBoard().length - 1 && inBoard.getBoard()[boardY + 1][boardX] == null)
-            slideDown();
+        if (GameBoard.getInstance().isEmptyBelow(this))
+            slipDown();
         else
             move();
     }
@@ -115,21 +113,17 @@ public abstract class Friend {
 //            validCanvasX = friend.getCanvasX(); // -> 버그 : 연속적으로 마우스이벤트에 의한 교환이 일어났을 때 화면상으로 돌이 제자리를 찾아 그려지지 않음
     }
 
-    private void slideDown() {
+    private void slipDown() {
         GameBoard inBoard = GameBoard.getInstance();
-        Friend[][] board = inBoard.getBoard();
         int defaultY = inBoard.getDefaultY();
         int dh = CanvasGameOp.getDh();
 
         for (int i = 0; i < movingSpeed; i++) {
             canvasY += 1;
             if (canvasY == defaultY + (boardY + 1) * 2 * dh) {
-                board[boardY][boardX] = null;
-                board[boardY + 1][boardX] = this;
-                setBoardX(boardX);
-                setBoardY(boardY + 1);
-                setValidCanvasX(canvasX);
-                setValidCanvasY(canvasY);
+                inBoard.alteredSlipDown(this);
+                this.boardY += 1;
+                validCanvasY = canvasY;
             }
         }
     }
@@ -140,15 +134,11 @@ public abstract class Friend {
                 canvasX += 1;
             else if (canvasX > validCanvasX)
                 canvasX -= 1;
-            else
-                setValidCanvasX(canvasX);
 
             if (canvasY < validCanvasY)
                 canvasY += 1;
             else if (canvasY > validCanvasY)
                 canvasY -= 1;
-            else
-                setValidCanvasY(canvasY);
         }
     }
 }

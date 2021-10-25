@@ -704,4 +704,14 @@ public class GameBoard {
         }
     }
 
+    public boolean isEmptyBelow(Friend friend) {
+        return friend.getBoardY() != BOARD_LENGTH - 1 && board[friend.getBoardY() + 1][friend.getBoardX()] == null;
+    }
+
+    public void alteredSlipDown(Friend friend) {
+        int x = friend.getBoardX();
+        int y = friend.getBoardY();
+        board[y][x] = null;
+        board[y + 1][x] = friend;
+    }
 }
