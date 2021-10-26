@@ -30,11 +30,8 @@ public class ButtonPause extends Button{
     public void draw(Graphics g) {
         CanvasGameOp observer = CanvasGameOp.getInstance();
 
-        int obW = observer.getWidth();
-        int obH = observer.getHeight();
-
-        int dw = obW / 22;
-        int dh = obH / 22;
+        int dw = CanvasGameOp.DW;
+        int dh = CanvasGameOp.DH;
 
         int x = 0 + 16 * dw;
         int y = 0 + 2 * dh;

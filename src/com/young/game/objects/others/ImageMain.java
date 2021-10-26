@@ -17,11 +17,8 @@ public class ImageMain {
     public void draw(Graphics g) {
         CanvasMain observer = CanvasMain.getInstance();
 
-        int obW = observer.getWidth();
-        int obH = observer.getHeight();
-
-        int dw = obW / 22;
-        int dh = obH / 22;
+        int dw = CanvasMain.DW;
+        int dh = CanvasMain.DH;
 
         int x = 0 + dw;
         int y = 0 + dh;

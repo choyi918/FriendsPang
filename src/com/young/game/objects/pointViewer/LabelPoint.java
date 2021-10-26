@@ -29,8 +29,8 @@ public class LabelPoint {
     public void draw(Graphics g) {
         CanvasGameOp observer = CanvasGameOp.getInstance();
 
-        int dw = observer.DW;
-        int dh = observer.DH;
+        int dw = CanvasGameOp.DW;
+        int dh = CanvasGameOp.DH;
 
 
         int defaultX = 0 + 11 * dw - (imageNums.size() * dw) / 2 ;

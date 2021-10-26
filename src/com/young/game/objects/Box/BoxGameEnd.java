@@ -41,7 +41,7 @@ public class BoxGameEnd {
 
     public void draw(Graphics g) {
         CanvasGameOp observer = CanvasGameOp.getInstance();
-        int dw = CanvasGameOp.DH;
+        int dw = CanvasGameOp.DW;
         int dh = CanvasGameOp.DH;
 
         g.setColor(new Color(0xFF, 0xFF, 0xFF, 150));

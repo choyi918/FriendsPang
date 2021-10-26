@@ -27,11 +27,8 @@ public class ButtonBackMainTwo extends Button {
     public void draw(Graphics g) {
         CanvasRanking observer = CanvasRanking.getInstance();
 
-        int obW = observer.getWidth();
-        int obH = observer.getHeight();
-
-        int dw = obW / 22;
-        int dh = obH / 22;
+        int dw = CanvasRanking.DW;
+        int dh = CanvasRanking.DH;
 
         int x = 0 + 9 * dw;
         int y = 0 + 20 * dh;

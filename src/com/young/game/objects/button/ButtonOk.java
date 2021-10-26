@@ -13,8 +13,8 @@ public class ButtonOk extends Button{
     public void draw(Graphics g) {
         CanvasRankingInput observer = CanvasRankingInput.getInstance();
 
-        int dw = observer.getWidth() / 22;
-        int dh = observer.getHeight() / 22;
+        int dw = CanvasRankingInput.DW;
+        int dh = CanvasRankingInput.DH;
 
         int defaultX = 0 + 3 / 2 * dw;
         int defaultY = 0 + 8 * dh;

@@ -1,24 +1,27 @@
 package com.young.game.objects.pointViewer;
 
-import com.young.game.ui.CanvasGameOp;
 import com.young.game.ui.CanvasMain;
 
 import java.awt.*;
 
 public class ImageNum {
     private Image imageNumSprite;
-    private int dw;
-    private int dh;
     private int index;
-    private int speed;
-
     private int sy1;
+
+    private static final int DW;
+    private static final int DH;
+    private static final int SPEED;
+
+    static {
+        DW = 50;
+        DH = 70;
+        SPEED = 10;
+    }
+
 
     public ImageNum(int index) {
         imageNumSprite = Toolkit.getDefaultToolkit().getImage("res/images/nums_50_700.png");
-        dw = 50;
-        dh = 70;
-        speed = 10;
         this.index = index;
     }
 
@@ -31,8 +34,8 @@ public class ImageNum {
     }
 
     public void update() {
-        if (sy1 != 0 + index * dh)
-            for (int i = 0; i < 10; i++) {
+        if (sy1 != 0 + index * DH)
+            for (int i = 0; i < SPEED; i++) {
                 sy1 += 1;
                 sy1 %= 700;
             }
@@ -42,8 +45,8 @@ public class ImageNum {
         CanvasMain observer = CanvasMain.getInstance();
 
         int sx1 = 0;
-        int sx2 = dw;
-        int sy2 = sy1 + dh;
+        int sx2 = DW;
+        int sy2 = sy1 + DH;
 
         g.drawImage(imageNumSprite,
                 x, y, x + w, y + h,

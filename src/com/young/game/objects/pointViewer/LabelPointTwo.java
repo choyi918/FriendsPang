@@ -25,11 +25,8 @@ public class LabelPointTwo {
     }
 
     public void draw(Graphics g) {
-        CanvasRanking observer = CanvasRanking.getInstance();
-
-        int dw = observer.getWidth() / 22;
-        int dh = observer.getHeight() / 22;
-
+        int dw = CanvasRanking.DW;
+        int dh = CanvasRanking.DH;
 
         int defaultX = 0 + x - (imageNums.size() * dw) / 2 ;
         int defaultY = y;

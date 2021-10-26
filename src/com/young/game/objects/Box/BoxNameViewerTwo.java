@@ -113,8 +113,8 @@ public class BoxNameViewerTwo {
     public void draw(Graphics g) {
         CanvasRankingInput observer = CanvasRankingInput.getInstance();
 
-        int dw = observer.getWidth() / 22;
-        int dh = observer.getHeight() / 22;
+        int dw = CanvasRankingInput.DW;
+        int dh = CanvasRankingInput.DH;
 
         g.setColor(new Color(0xFF, 0xFF, 0xFF, 230));
         g.fillRect(x, y, 8 * dw, dh);

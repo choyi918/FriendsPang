@@ -16,8 +16,8 @@ public class BoxNameViewer {
     public void draw(Graphics g) {
         CanvasRankingInput observer = CanvasRankingInput.getInstance();
 
-        int dw = observer.getWidth() / 22;
-        int dh = observer.getHeight() / 22;
+        int dw = observer.DW;
+        int dh = observer.DH;
         int dw2 = dw / 4;
         int dh2 = dh / 4;
 
