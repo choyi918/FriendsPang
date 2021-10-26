@@ -22,9 +22,21 @@ public class CanvasMain extends Canvas implements Runnable {
     private ButtonExit buttonExit;
     private MouseAdapterForCanvasMain mouseAdapterForCanvasMain;
 
+    private static final int WIDTH;
+    private static final int HEIGHT;
+    public static final int DW;
+    public static final int DH;
+
+    static  {
+        WIDTH = 680;
+        HEIGHT = 680;
+        DW = WIDTH / 22;
+        DH = HEIGHT / 22;
+    }
+
 
     private CanvasMain() {
-        setSize(680, 702);
+        setSize(WIDTH, HEIGHT);
         setBackground(new Color(0xFD, 0xDC, 0x2F));
 
         imageMain = new ImageMain();
@@ -80,10 +92,6 @@ public class CanvasMain extends Canvas implements Runnable {
 
     /* nested class */
     private class MouseAdapterForCanvasMain extends MouseAdapter {
-        int obW = CanvasMain.this.getWidth();
-        int obH = CanvasMain.this.getHeight();
-        int dw = obW / 22;
-        int dh = obH / 22;
         int mouseX;
         int mouseY;
 
@@ -92,8 +100,8 @@ public class CanvasMain extends Canvas implements Runnable {
             mouseX = e.getX();
             mouseY = e.getY();
 
-            if (0 + 7 * dw <= mouseX && mouseX <= 0 + 15 * dw) {
-                if (0 + 15 * dh <= mouseY && mouseY <= 0 + 16 * dh) {
+            if (0 + 7 * DW <= mouseX && mouseX <= 0 + 15 * DW) {
+                if (0 + 15 * DH <= mouseY && mouseY <= 0 + 16 * DH) {
                     System.out.println("Game Start!!");
                     playSound("click_mouse.wav");
                     CanvasMain.this.setVisible(false);
@@ -103,14 +111,14 @@ public class CanvasMain extends Canvas implements Runnable {
                     canvasGameOp.setVisible(true);
                     canvasGameOp.validate();
                 }
-                else if (0 + 17 * dh <= mouseY && mouseY <= 0 + 18 * dh) {
+                else if (0 + 17 * DH <= mouseY && mouseY <= 0 + 18 * DH) {
                     System.out.println("Ranking!!");
                     playSound("click_mouse.wav");
                     CanvasMain.this.setVisible(false);
                     CanvasRanking canvasRanking = CanvasRanking.getInstance();
                     GameFrame.getInstance().add(canvasRanking);
                 }
-                else if (0 + 19 * dh <= mouseY && mouseY <= 0 + 20 * dh) {
+                else if (0 + 19 * DH <= mouseY && mouseY <= 0 + 20 * DH) {
                     System.out.println("go home!!");
                     playSound("click_mouse.wav");
                 }
@@ -126,12 +134,12 @@ public class CanvasMain extends Canvas implements Runnable {
             buttonRankingShowing.outpointButton();
             buttonExit.outpointButton();
 
-            if (0 + 7 * dw <= mouseX && mouseX <= 0 + 15 * dw) {
-                if (0 + 15 * dh <= mouseY && mouseY <= 0 + 16 * dh)
+            if (0 + 7 * DW <= mouseX && mouseX <= 0 + 15 * DW) {
+                if (0 + 15 * DH <= mouseY && mouseY <= 0 + 16 * DH)
                     buttonGameStart.pointButton();
-                else if (0 + 17 * dh <= mouseY && mouseY <= 0 + 18 * dh)
+                else if (0 + 17 * DH <= mouseY && mouseY <= 0 + 18 * DH)
                     buttonRankingShowing.pointButton();
-                else if (0 + 19 * dh <= mouseY && mouseY <= 0 + 20 * dh)
+                else if (0 + 19 * DH <= mouseY && mouseY <= 0 + 20 * DH)
                     buttonExit.pointButton();
             }
         }

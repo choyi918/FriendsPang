@@ -22,21 +22,21 @@ public class CanvasRanking extends Canvas implements Runnable{
     private LabelPointTwo[] labelPointTwos;
 
     private static CanvasRanking instance;
-    private static int width;
-    private static int height;
-    private static int dw;
-    private static int dh;
+    private static final int WIDTH;
+    private static final int HEIGHT;
+    public static final int DW;
+    public static final int DH;
 
     static {
-        width = 680;
-        height = 680;
+        WIDTH = 680;
+        HEIGHT = 680;
+        DW = WIDTH / 22;
+        DH = HEIGHT / 22;
     }
 
 
     private CanvasRanking() {
-        setSize(width, height + 22); // 22는 메뉴바 height
-        dw = getWidth() / 22; // 이 22는 위에 22와 다름
-        dh = getHeight() / 22;
+        setSize(WIDTH, HEIGHT); // 22는 메뉴바 height
 
         buttonBackMainTwo = ButtonBackMainTwo.getInstance();
         imageBackGround = Toolkit.getDefaultToolkit().getImage("res/images/autumn_story.png");
@@ -56,8 +56,8 @@ public class CanvasRanking extends Canvas implements Runnable{
                 int eX = e.getX();
                 int eY = e.getY();
 
-                if (0 + 9 * dw <= eX && eX <= 0 + 9 * dw + 4 *dw
-                        && 0 + 20 * dh <= eY && eY <= 0 + 20 * dh + dh) {
+                if (0 + 9 * DW <= eX && eX <= 0 + 9 * DW + 4 * DW
+                        && 0 + 20 * DH <= eY && eY <= 0 + 20 * DH + DH) {
                     setVisible(false);
                     CanvasMain.getInstance().setVisible(true);
                     instance = null;
@@ -70,8 +70,8 @@ public class CanvasRanking extends Canvas implements Runnable{
                 int eY = e.getY();
 
                 buttonBackMainTwo.outpointButton();
-                if (0 + 9 * dw <= eX && eX <= 0 + 9 * dw + 4 *dw
-                        && 0 + 20 * dh <= eY && eY <= 0 + 20 * dh + dh)
+                if (0 + 9 * DW <= eX && eX <= 0 + 9 * DW + 4 * DW
+                        && 0 + 20 * DH <= eY && eY <= 0 + 20 * DH + DH)
                     buttonBackMainTwo.pointButton();
             }
         };
@@ -127,11 +127,11 @@ public class CanvasRanking extends Canvas implements Runnable{
 
         for (int i = 0; i < boxNameViewerTwos.length; i++)
             if (i < rankingInfos.length)
-                boxNameViewerTwos[i] = new BoxNameViewerTwo(rankingInfos[i].getName(), 4 * dw, 4 * dh + i * 2 * dh);
+                boxNameViewerTwos[i] = new BoxNameViewerTwo(rankingInfos[i].getName(), 4 * DW, 4 * DH + i * 2 * DH);
 
         for (int i = 0; i < labelPointTwos.length; i++)
             if (i < rankingInfos.length)
-                labelPointTwos[i] = new LabelPointTwo(rankingInfos[i].getPoint(), 15 * dw, 4 * dh + i * 2 * dh);
+                labelPointTwos[i] = new LabelPointTwo(rankingInfos[i].getPoint(), 15 * DW, 4 * DH + i * 2 * DH);
 
     }
 
@@ -143,9 +143,9 @@ public class CanvasRanking extends Canvas implements Runnable{
 
         buffG.drawImage(imageBackGround, 0, 0, getWidth(), getHeight(), this);
         buffG.setColor(new Color(0xFF, 0xFF, 0xFF, 150));
-        buffG.fillRect(0 + 8 * dw, 0 + 2 * dh, 6 * dw, dh);
+        buffG.fillRect(0 + 8 * DW, 0 + 2 * DH, 6 * DW, DH);
         buffG.setColor(Color.BLACK);
-        buffG.drawImage(imageRanking, 0 + 8 * dw, 0 + 2 * dh, 6 * dw, dh, this);
+        buffG.drawImage(imageRanking, 0 + 8 * DW, 0 + 2 * DH, 6 * DW, DH, this);
         buttonBackMainTwo.draw(buffG);
 
         for (BoxNameViewerTwo b : boxNameViewerTwos)
@@ -155,8 +155,6 @@ public class CanvasRanking extends Canvas implements Runnable{
         for (LabelPointTwo l : labelPointTwos)
             if (l != null)
                 l.draw(buffG);
-
-
 
         g.drawImage(buff, 0, 0, this);
     }

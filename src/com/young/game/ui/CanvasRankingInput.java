@@ -25,29 +25,28 @@ public class CanvasRankingInput extends Canvas implements Runnable {
     private MouseAdapterForCanvasRankingInput mouseAdapterForCanvasRankingInput;
 
     private static CanvasRankingInput instance;
-    private static int width;
-    private static int height;
-    private static int dw;
-    private static int dh;
     private static final int ALPHABET_SIZE;
+    private static final int WIDTH;
+    private static final int HEIGHT;
+    public static final int DW;
+    public static final int DH;
 
     static {
-        width = 680;
-        height = 702;
         ALPHABET_SIZE = 26;
+        WIDTH = 680;
+        HEIGHT = 680;
+        DW = WIDTH / 22;
+        DH = HEIGHT / 22;
     }
 
     private CanvasRankingInput() {
-        setSize(width, height);
+        setSize(WIDTH, HEIGHT);
         setVisible(true);
-
-        dw = getWidth() / 22;
-        dh = getHeight() / 22;
         setBackground(new Color(0xFF, 0xFF,0xFF, 0));
 
         buttonChars = new LinkedList<>();
         buttons = new ButtonChar[ALPHABET_SIZE];
-        labelPointRenew = new LabelPointTwo(GameBoard.getInstance().getPoint(), 11 * dw, 2 * dh);
+        labelPointRenew = new LabelPointTwo(GameBoard.getInstance().getPoint(), 11 * DW, 2 * DH);
 
         int i = 0;
         buttons[i++] = new ButtonA();
@@ -150,10 +149,10 @@ public class CanvasRankingInput extends Canvas implements Runnable {
     }
 
     private class MouseAdapterForCanvasRankingInput extends MouseAdapter {
-        int defaultX = 0 + 3 / 2 * dw;
-        int defaultY = 0 + 8 * dh;
-        int dw2 = dw / 4;
-        int dh2 = dh / 4;
+        int defaultX = 0 + 3 / 2 * DW;
+        int defaultY = 0 + 8 * DH;
+        int dw2 = DW / 4;
+        int dh2 = DH / 4;
 
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -161,18 +160,18 @@ public class CanvasRankingInput extends Canvas implements Runnable {
             int eY = e.getY();
 
             for (char ch = 'A'; ch < 'Z'; ch++)
-                if (getCharX(ch) <= eX && eX <= getCharX(ch) + 2 * dw - dw2
-                        && getCharY(ch) <= eY && eY <= getCharY(ch) + 2 * dh - dh2) {
+                if (getCharX(ch) <= eX && eX <= getCharX(ch) + 2 * DW - dw2
+                        && getCharY(ch) <= eY && eY <= getCharY(ch) + 2 * DH - dh2) {
                     if (buttonChars.size() != 8)
                         buttonChars.add(buttons[ch - 'A']);
                 }
 
-            if (getCharX('Z') + 3 * dw<= eX && eX <= getCharX('Z') + 3 * dw + 2 * dw - dw2
-                    && getCharY('Z') <= eY && eY <= getCharY('Z') + 2 * dh - dh2)
+            if (getCharX('Z') + 3 * DW <= eX && eX <= getCharX('Z') + 3 * DW + 2 * DW - dw2
+                    && getCharY('Z') <= eY && eY <= getCharY('Z') + 2 * DH - dh2)
                 buttonChars.removeLast();
 
-            if (getCharX('Z') + 3 * dw * 2 <= eX && eX <= getCharX('Z') + 3 * dw * 2+ 2 * dw - dw2
-                    && getCharY('Z') <= eY && eY <= getCharY('Z') + 2 * dh - dh2){
+            if (getCharX('Z') + 3 * DW * 2 <= eX && eX <= getCharX('Z') + 3 * DW * 2+ 2 * DW - dw2
+                    && getCharY('Z') <= eY && eY <= getCharY('Z') + 2 * DH - dh2){
                 try {
                     CanvasRankingInput.this.register();
                 } catch (IOException exception) {
@@ -199,28 +198,28 @@ public class CanvasRankingInput extends Canvas implements Runnable {
             buttonOk.outpointButton();
 
             for (char ch = 'A'; ch < 'Z' + 1; ch++)
-                if (getCharX(ch) <= eX && eX <= getCharX(ch) + 2 * dw - dw2
-                        && getCharY(ch) <= eY && eY <= getCharY(ch) + 2 * dh - dh2)
+                if (getCharX(ch) <= eX && eX <= getCharX(ch) + 2 * DW - dw2
+                        && getCharY(ch) <= eY && eY <= getCharY(ch) + 2 * DH - dh2)
                     buttons[ch - 'A'].pointButton();
 
 
-            if (getCharX('Z') + 3 * dw<= eX && eX <= getCharX('Z') + 3 * dw + 2 * dw - dw2
-                    && getCharY('Z') <= eY && eY <= getCharY('Z') + 2 * dh - dh2){
+            if (getCharX('Z') + 3 * DW <= eX && eX <= getCharX('Z') + 3 * DW + 2 * DW - dw2
+                    && getCharY('Z') <= eY && eY <= getCharY('Z') + 2 * DH - dh2){
                 buttonArrow.pointButton();
             }
 
-            if (getCharX('Z') + 3 * dw * 2 <= eX && eX <= getCharX('Z') + 3 * dw * 2+ 2 * dw - dw2
-                    && getCharY('Z') <= eY && eY <= getCharY('Z') + 2 * dh - dh2){
+            if (getCharX('Z') + 3 * DW * 2 <= eX && eX <= getCharX('Z') + 3 * DW * 2+ 2 * DW - dw2
+                    && getCharY('Z') <= eY && eY <= getCharY('Z') + 2 * DH - dh2){
                 buttonOk.pointButton();
             }
         }
 
         private int getCharX(char ch) {
-            return defaultX + ((ch - 'A') % 7) * 3 * dw;
+            return defaultX + ((ch - 'A') % 7) * 3 * DW;
         }
 
         private int getCharY(char ch) {
-            return defaultY + ((ch - 'A') / 7) * 3 * dh;
+            return defaultY + ((ch - 'A') / 7) * 3 * DH;
         }
     };
 }

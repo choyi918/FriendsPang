@@ -40,8 +40,8 @@ public class GameBoard {
     private static int defaultY;
 
     static {
-        defaultX = 0 + 4 * CanvasGameOp.getDw();
-        defaultY = 0 + 4 * CanvasGameOp.getDh();
+        defaultX = 0 + 4 * CanvasGameOp.DW;
+        defaultY = 0 + 4 * CanvasGameOp.DH;
     }
 
     private GameBoard() {
@@ -103,8 +103,8 @@ public class GameBoard {
     }
 
     public void draw(Graphics g) {
-        int dw = CanvasGameOp.getDw();
-        int dh = CanvasGameOp.getDh();
+        int dw = CanvasGameOp.DW;
+        int dh = CanvasGameOp.DH;
 
         g.setColor(Color.BLACK);
         g.fillRect(defaultX, defaultY, 7 * 2 * dw, 7 * 2 * dh);
@@ -555,7 +555,7 @@ public class GameBoard {
     public void initializeToVerifiedBoard() {
         Friend[][] tmpBoard = initializeTmpBoard();
 
-        int dw = CanvasGameOp.getDw();
+        int dw = CanvasGameOp.DW;
 
         for (int y = 0; y < BOARD_LENGTH; y++) {
             for (int x = 0; x < BOARD_LENGTH; x++) {

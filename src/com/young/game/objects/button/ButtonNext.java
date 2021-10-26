@@ -9,13 +9,13 @@ public class ButtonNext extends Button{
     private int y;
     public ButtonNext() {
         super("button_next_default.png", "button_next_pointed.png");
-        x = 0 + 9 * CanvasGameOp.getDw();
-        y = 0 + 20 * CanvasGameOp.getDh() + 5 * CanvasGameOp.getDh();
+        x = 0 + 9 * CanvasGameOp.DW;
+        y = 0 + 20 * CanvasGameOp.DH + 5 * CanvasGameOp.DH;
     }
 
     public void update() {
         for (int i = 0; i < 10; i++)
-            if (y != 0 + 20 * CanvasGameOp.getDh() + CanvasGameOp.getDh() / 2)
+            if (y != 0 + 20 * CanvasGameOp.DH + CanvasGameOp.DH / 2)
                 y--;
     }
 
@@ -23,8 +23,8 @@ public class ButtonNext extends Button{
     public void draw(Graphics g) {
         CanvasGameOp observer = CanvasGameOp.getInstance();
 
-        int dw = CanvasGameOp.getDw();
-        int dh = CanvasGameOp.getDh();
+        int dw = CanvasGameOp.DW;
+        int dh = CanvasGameOp.DH;
 
         g.setColor(new Color(0xFF, 0xFF, 0xFF, 100));
         g.fillRect(x, y, 4 * dw, dh);

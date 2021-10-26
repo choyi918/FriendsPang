@@ -17,11 +17,11 @@ public class BoxGameEnd {
     private boolean bSoundPlay;
 
     public BoxGameEnd() {
-        x = 0 + 4 * CanvasGameOp.getDw();
-        y = 0 + 4 * CanvasGameOp.getDh();
+        x = 0 + 4 * CanvasGameOp.DW;
+        y = 0 + 4 * CanvasGameOp.DH;
 
         image = Toolkit.getDefaultToolkit().getImage("res/images/end.png");
-        imageY = 0 - 7 * 2 * CanvasGameOp.getDh();
+        imageY = 0 - 7 * 2 * CanvasGameOp.DH;
     }
 
     public boolean isCompleteMoving() {
@@ -29,7 +29,7 @@ public class BoxGameEnd {
     }
 
     public void update() {
-        int dh = CanvasGameOp.getDh();
+        int dh = CanvasGameOp.DH;
         if (imageY != 0 + 4 * dh)
             for (int i = 0; i < 20; i++)
                 imageY++;
@@ -41,8 +41,8 @@ public class BoxGameEnd {
 
     public void draw(Graphics g) {
         CanvasGameOp observer = CanvasGameOp.getInstance();
-        int dw = CanvasGameOp.getDw();
-        int dh = CanvasGameOp.getDh();
+        int dw = CanvasGameOp.DH;
+        int dh = CanvasGameOp.DH;
 
         g.setColor(new Color(0xFF, 0xFF, 0xFF, 150));
         g.fillRect(x, y, 7 * 2 * dw, 7 * 2 * dh);

@@ -20,8 +20,8 @@ public class ImageTimeIndicator {
     }
 
     private ImageTimeIndicator() {
-        x = 0 + 2 * CanvasGameOp.getDw();
-        y = 0 + 19 * CanvasGameOp.getDh();
+        x = 0 + 2 * CanvasGameOp.DW;
+        y = 0 + 19 * CanvasGameOp.DH;
     }
 
     public static ImageTimeIndicator getInstance() {
@@ -58,7 +58,7 @@ public class ImageTimeIndicator {
         if (bStop)
             return;
 
-        if (x != 0 + 19 * CanvasGameOp.getDw()) {
+        if (x != 0 + 19 * CanvasGameOp.DW) {
             if (durationIndex == DURATION) {
                 x += 1;
                 durationIndex %= DURATION;
@@ -71,7 +71,7 @@ public class ImageTimeIndicator {
 
     public void draw(Graphics g) {
         CanvasGameOp observer = CanvasGameOp.getInstance();
-        g.drawImage(image, x, y, CanvasGameOp.getDw(), CanvasGameOp.getDh(), observer);
+        g.drawImage(image, x, y, CanvasGameOp.DW, CanvasGameOp.DH, observer);
     }
 
 }

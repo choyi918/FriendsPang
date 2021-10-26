@@ -41,8 +41,8 @@ public class LabelTimer {
     }
 
     public void draw(Graphics g) {
-        int dw = CanvasGameOp.getDw();
-        int dh = CanvasGameOp.getDh();
+        int dw = CanvasGameOp.DW;
+        int dh = CanvasGameOp.DH;
 
         g.setColor(new Color(0xFF, 0xFF, 0xFF, 100));
         g.fillRect(2 * dw, 19 * dh, 18 * dw, dh);

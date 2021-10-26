@@ -36,21 +36,21 @@ public class CanvasGameOp extends Canvas implements Runnable {
     private boolean bPossibleMouseEvent;
 
     /*Canvas 22등분 한 후 단위 길이  */
-    private static int width;
-    private static int height;
-    private static int dw;
-    private static int dh;
+    private static final int WIDTH;
+    private static final int HEIGHT;
+    public static final int DW;
+    public static final int DH;
 
     static {
-        width = 680;
-        height = 680;
-        dw = width / 22;
-        dh = height / 22;
+        WIDTH = 680;
+        HEIGHT = 680;
+        DW = WIDTH / 22;
+        DH = HEIGHT / 22;
     }
 
 
     private CanvasGameOp() {
-        setSize(width, height);
+        setSize(WIDTH, HEIGHT);
         setBackground(new Color(0xFD, 0xDC, 0x2F));
 
         buttonBackMain = ButtonBackMain.getInstance();
@@ -86,14 +86,6 @@ public class CanvasGameOp extends Canvas implements Runnable {
     }
 
     /* Getters */
-    public static int getDw() {
-        return dw;
-    }
-
-    public static int getDh() {
-        return dh;
-    }
-
     public boolean isPause() {
         return bPause;
     }
@@ -180,10 +172,6 @@ public class CanvasGameOp extends Canvas implements Runnable {
     }
 
     private class MouseAdapterForCanvasGameOp extends MouseAdapter{
-        int obW = CanvasGameOp.this.getWidth();
-        int obH = CanvasGameOp.this.getHeight();
-        int dw = obW / 22;
-        int dh = obH / 22;
         int pressedX;
         int pressedY;
         int releasedX;
@@ -195,8 +183,8 @@ public class CanvasGameOp extends Canvas implements Runnable {
             int mouseX = (int)p.getX();
             int mouseY = (int)p.getY();
 
-            if (0 + 2 * dh <= mouseY && mouseY <= 0 + 3 * dh) {
-                if (0 + 2 * dw <= mouseX && mouseX <= 0 + 6 * dw) {
+            if (0 + 2 * DH <= mouseY && mouseY <= 0 + 3 * DH) {
+                if (0 + 2 * DW <= mouseX && mouseX <= 0 + 6 * DW) {
                     playSound("click_mouse.wav");
                     CanvasMain.getInstance().setVisible(true);
                     CanvasGameOp.this.setVisible(false);
@@ -204,7 +192,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
                     bRunning = false;
                     reset();
                 }
-                else if (0 + 16 * dh <= mouseX && mouseX <= 0 + 20 * dh) {
+                else if (0 + 16 * DH <= mouseX && mouseX <= 0 + 20 * DH) {
                     System.out.println("Pause!!");
                     playSound("click_mouse.wav");
                     /* Game을 일시정지 하는 코드 : 마우스 안 먹게하기, 타이머 일시정지, 서브스레드에 업데이트관련 동작들 동작 ㄴ*/
@@ -219,8 +207,8 @@ public class CanvasGameOp extends Canvas implements Runnable {
             }
 
             if (buttonNext != null)
-                if (0 + 9 * dw <= mouseX && mouseX <= 0 + 9 * dw + 4 * dw
-                        && 0 + 20 * dh + dh / 2 <= mouseY && mouseY <= 0 + 20 * dh + dh / 2 + dh) {
+                if (0 + 9 * DW <= mouseX && mouseX <= 0 + 9 * DW + 4 * DW
+                        && 0 + 20 * DH + DH / 2 <= mouseY && mouseY <= 0 + 20 * DH + DH / 2 + DH) {
                     playSound("click_mouse.wav");
                     setVisible(false);
                     GameFrame.getInstance().add(CanvasRankingInput.getInstance());
@@ -236,17 +224,17 @@ public class CanvasGameOp extends Canvas implements Runnable {
             buttonBackMain.outpointButton();
             buttonPause.outpointButton();
 
-            if (0 + 2 * dh <= mouseY && mouseY <= 0 + 3 * dh) {
-                if (0 + 2 * dw <= mouseX && mouseX <= 0 + 6 * dw)
+            if (0 + 2 * DH <= mouseY && mouseY <= 0 + 3 * DH) {
+                if (0 + 2 * DW <= mouseX && mouseX <= 0 + 6 * DW)
                     buttonBackMain.pointButton();
-                else if (0 + 16 * dh <= mouseX && mouseX <= 0 + 20 * dh)
+                else if (0 + 16 * DH <= mouseX && mouseX <= 0 + 20 * DH)
                     buttonPause.pointButton();
             }
 
             if (buttonNext != null) {
                 buttonNext.outpointButton();
-                if (0 + 9 * dw <= mouseX && mouseX <= 0 + 9 * dw + 4 * dw
-                        && 0 + 20 * dh + dh / 2 <= mouseY && mouseY <= 0 + 20 * dh + dh / 2 + dh)
+                if (0 + 9 * DW <= mouseX && mouseX <= 0 + 9 * DW + 4 * DW
+                        && 0 + 20 * DH + DH / 2 <= mouseY && mouseY <= 0 + 20 * DH + DH / 2 + DH)
                     buttonNext.pointButton();
             }
         }
@@ -262,8 +250,8 @@ public class CanvasGameOp extends Canvas implements Runnable {
             pressedX = (int)p.getX();
             pressedY = (int)p.getY();
 
-            if (!(0 + 4 * dw <= pressedX && pressedX <= 0 + 18 * dw
-                    && 0 + 4 * dh <= pressedY && pressedY <= 0 + 18 * dh)) {
+            if (!(0 + 4 * DW <= pressedX && pressedX <= 0 + 18 * DW
+                    && 0 + 4 * DH <= pressedY && pressedY <= 0 + 18 * DH)) {
                 pressedX = 0;
                 pressedY = 0;
             }
@@ -286,8 +274,8 @@ public class CanvasGameOp extends Canvas implements Runnable {
             releasedY = (int)p.getY();
 
             /* 조건에 맞지 않는 경우 그냥 return */
-            if (!(0 + 4 * dw <= releasedX && releasedX <= 0 + 18 * dw
-                    && 0 + 4 * dh <= releasedY && releasedY <= 0 + 18 * dh)) {
+            if (!(0 + 4 * DW <= releasedX && releasedX <= 0 + 18 * DW
+                    && 0 + 4 * DH <= releasedY && releasedY <= 0 + 18 * DH)) {
                 initializePressedAndReleasedXY();
                 return;
             }
@@ -299,8 +287,8 @@ public class CanvasGameOp extends Canvas implements Runnable {
             }
 
             /* 마우스 릴리즈가 프레스 기준으로 어떤 경계 안으로 떨어졌는지 판단하고 그에 따라 board X2, Y2를 정함 */
-            int boardX1 = (pressedX - 4 * dw) / (2 * dw);
-            int boardY1 = (pressedY - 4 * dh) / (2 * dh);
+            int boardX1 = (pressedX - 4 * DW) / (2 * DW);
+            int boardY1 = (pressedY - 4 * DH) / (2 * DH);
             int boardX2 = 0;
             int boardY2 = 0;
             int px = pressedX;

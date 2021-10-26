@@ -24,8 +24,8 @@ public abstract class Friend {
         image = Toolkit.getDefaultToolkit().getImage(String.format("res/images/%s", imageFileName));
 
 
-        int dw = CanvasGameOp.getDw();
-        int dh = CanvasGameOp.getDh();
+        int dw = CanvasGameOp.DW;
+        int dh = CanvasGameOp.DH;
         int defaultX = GameBoard.getDefaultX();
         int defaultY = GameBoard.getDefaultY();
 
@@ -85,8 +85,8 @@ public abstract class Friend {
     public void draw(Graphics g) {
         CanvasGameOp observer = CanvasGameOp.getInstance();
 
-        int dw = CanvasGameOp.getDw();
-        int dh = CanvasGameOp.getDh();
+        int dw = CanvasGameOp.DW;
+        int dh = CanvasGameOp.DH;
 
         g.drawImage(image, canvasX, canvasY, 2 * dw, 2 * dh, observer);
     }
@@ -99,8 +99,8 @@ public abstract class Friend {
     public void moveTo(Friend friend) {
         int fBoardX = friend.getBoardX();
         int fBoardY = friend.getBoardY();
-        int dw = CanvasGameOp.getDw();
-        int dh = CanvasGameOp.getDh();
+        int dw = CanvasGameOp.DW;
+        int dh = CanvasGameOp.DH;
         GameBoard inBoard = GameBoard.getInstance();
 
         if ((boardY < inBoard.getBoard().length - 1 && boardX == fBoardX && boardY + 1 == fBoardY)
@@ -116,7 +116,7 @@ public abstract class Friend {
     private void slipDown() {
         GameBoard inBoard = GameBoard.getInstance();
         int defaultY = inBoard.getDefaultY();
-        int dh = CanvasGameOp.getDh();
+        int dh = CanvasGameOp.DH;
 
         for (int i = 0; i < movingSpeed; i++) {
             canvasY += 1;
