@@ -116,10 +116,6 @@ public class BoxNameViewerTwo {
         int dw = CanvasRankingInput.DW;
         int dh = CanvasRankingInput.DH;
 
-        g.setColor(new Color(0xFF, 0xFF, 0xFF, 230));
-        g.fillRect(x, y, 8 * dw, dh);
-        g.setColor(Color.BLACK);
-
         for (int i = 0; i < buttonCharsOfName.size(); i++) {
             Image image = buttonCharsOfName.get(i).getImage();
             g.drawRect(x + i * dw, y, dw, dh);

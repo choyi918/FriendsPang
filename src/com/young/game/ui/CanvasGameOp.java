@@ -149,6 +149,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
                     buttonNext.update();
             }
 
+            labelPoint.setFinalPoint(gameBoard.getPoint());
             labelPoint.update();
 
             repaint();

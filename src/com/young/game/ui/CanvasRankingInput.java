@@ -3,7 +3,7 @@ package com.young.game.ui;
 import com.young.game.objects.Box.BoxNameViewer;
 import com.young.game.objects.GameBoard;
 import com.young.game.objects.button.*;
-import com.young.game.objects.pointViewer.LabelPointTwo;
+import com.young.game.objects.pointViewer.LabelPoint;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -19,7 +19,7 @@ public class CanvasRankingInput extends Canvas implements Runnable {
     private ButtonArrow buttonArrow;
     private ButtonOk buttonOk;
     private LinkedList<ButtonChar> buttonChars;
-    private LabelPointTwo labelPointRenew;
+    private LabelPoint labelPointRenew;
     private Image imageBackGround;
     private int point;
     private MouseAdapterForCanvasRankingInput mouseAdapterForCanvasRankingInput;
@@ -46,7 +46,7 @@ public class CanvasRankingInput extends Canvas implements Runnable {
 
         buttonChars = new LinkedList<>();
         buttons = new ButtonChar[ALPHABET_SIZE];
-        labelPointRenew = new LabelPointTwo(GameBoard.getInstance().getPoint(), 11 * DW, 2 * DH);
+        labelPointRenew = new LabelPoint(GameBoard.getInstance().getPoint(), 11 * DW, 2 * DH, 200);
 
         int i = 0;
         buttons[i++] = new ButtonA();

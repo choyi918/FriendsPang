@@ -2,7 +2,7 @@ package com.young.game.ui;
 
 import com.young.game.objects.Box.BoxNameViewerTwo;
 import com.young.game.objects.button.ButtonBackMainTwo;
-import com.young.game.objects.pointViewer.LabelPointTwo;
+import com.young.game.objects.pointViewer.LabelPoint;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -19,7 +19,7 @@ public class CanvasRanking extends Canvas implements Runnable{
 
     private RankingInfo[] rankingInfos;
     private BoxNameViewerTwo[] boxNameViewerTwos;
-    private LabelPointTwo[] labelPointTwos;
+    private LabelPoint[] labelPointTwos;
 
     private static CanvasRanking instance;
     private static final int WIDTH;
@@ -43,7 +43,7 @@ public class CanvasRanking extends Canvas implements Runnable{
         imageRanking = Toolkit.getDefaultToolkit().getImage("res/images/title_ranking.png");
 
         boxNameViewerTwos = new BoxNameViewerTwo[8];
-        labelPointTwos = new LabelPointTwo[8];
+        labelPointTwos = new LabelPoint[8];
         try {
             loadRankingInfo();
         } catch (IOException e) {
@@ -131,7 +131,7 @@ public class CanvasRanking extends Canvas implements Runnable{
 
         for (int i = 0; i < labelPointTwos.length; i++)
             if (i < rankingInfos.length)
-                labelPointTwos[i] = new LabelPointTwo(rankingInfos[i].getPoint(), 15 * DW, 4 * DH + i * 2 * DH);
+                labelPointTwos[i] = new LabelPoint(rankingInfos[i].getPoint(), 15 * DW, 4 * DH + i * 2 * DH, 200);
 
     }
 
@@ -142,19 +142,27 @@ public class CanvasRanking extends Canvas implements Runnable{
         Graphics buffG = buff.getGraphics();
 
         buffG.drawImage(imageBackGround, 0, 0, getWidth(), getHeight(), this);
+
         buffG.setColor(new Color(0xFF, 0xFF, 0xFF, 150));
         buffG.fillRect(0 + 8 * DW, 0 + 2 * DH, 6 * DW, DH);
+
         buffG.setColor(Color.BLACK);
         buffG.drawImage(imageRanking, 0 + 8 * DW, 0 + 2 * DH, 6 * DW, DH, this);
         buttonBackMainTwo.draw(buffG);
 
-        for (BoxNameViewerTwo b : boxNameViewerTwos)
+        for (int i = 0; i < 8; i++) {
+            buffG.setColor(new Color(0xFF, 0xFF, 0xFF, 230));
+            buffG.fillRect(4 * DW, 4 * DH + i * 2 * DH, 14 * DW, DH);
+            buffG.setColor(Color.BLACK);
+
+            BoxNameViewerTwo b = boxNameViewerTwos[i];
             if (b != null)
                 b.draw(buffG);
 
-        for (LabelPointTwo l : labelPointTwos)
+            LabelPoint l = labelPointTwos[i];
             if (l != null)
                 l.draw(buffG);
+        }
 
         g.drawImage(buff, 0, 0, this);
     }
@@ -167,7 +175,7 @@ public class CanvasRanking extends Canvas implements Runnable{
     @Override
     public void run() {
         while (true) {
-            for (LabelPointTwo l : labelPointTwos)
+            for (LabelPoint l : labelPointTwos)
                 if (l != null)
                     l.update();
 
