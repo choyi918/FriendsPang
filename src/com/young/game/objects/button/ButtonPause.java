@@ -5,25 +5,13 @@ import com.young.game.ui.CanvasGameOp;
 import java.awt.*;
 
 public class ButtonPause extends Button{
-    private static ButtonPause instance;
     private Image imageButtonRestart;
     private Image imageButtonRestartPointed;
 
-    private ButtonPause() {
+    public ButtonPause() {
         super("button_pause.png", "button_pause_pointed.png");
         imageButtonRestart = Toolkit.getDefaultToolkit().getImage("res/images/button_restart.png");
         imageButtonRestartPointed = Toolkit.getDefaultToolkit().getImage("res/images/button_restart_pointed.png");
-    }
-
-    public static ButtonPause getInstance() {
-        if (instance == null)
-            instance = new ButtonPause();
-
-        return instance;
-    }
-
-    public static void reset() {
-        instance = null;
     }
 
     @Override

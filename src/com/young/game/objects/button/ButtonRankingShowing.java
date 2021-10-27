@@ -5,16 +5,8 @@ import com.young.game.ui.CanvasMain;
 import java.awt.*;
 
 public class ButtonRankingShowing extends Button{
-    private static ButtonRankingShowing instance;
-
-    private ButtonRankingShowing() {
+    public ButtonRankingShowing() {
         super("button_ranking.png", "button_ranking_pointed.png");
-    }
-
-    public static ButtonRankingShowing getInstance() {
-        if (instance == null)
-            instance = new ButtonRankingShowing();
-        return instance;
     }
 
     @Override

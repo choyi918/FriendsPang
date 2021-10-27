@@ -12,7 +12,6 @@ public class ImageTimeIndicator {
     private boolean bStop;
 
     private static Image image;
-    private static ImageTimeIndicator instance;
     private static final int DURATION;
 
     static {
@@ -20,19 +19,9 @@ public class ImageTimeIndicator {
         DURATION = 30;
     }
 
-    private ImageTimeIndicator() {
+    public ImageTimeIndicator() {
         x = 0 + 2 * CanvasGameOp.DW;
         y = 0 + 19 * CanvasGameOp.DH;
-    }
-
-    public static ImageTimeIndicator getInstance() {
-        if (instance == null)
-            instance = new ImageTimeIndicator();
-        return instance;
-    }
-
-    public void reset() {
-        instance = null;
     }
 
     public int getX() {

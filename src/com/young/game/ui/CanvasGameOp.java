@@ -52,12 +52,12 @@ public class CanvasGameOp extends Canvas implements Runnable {
         setSize(WIDTH, HEIGHT);
         setBackground(new Color(0xFD, 0xDC, 0x2F));
 
-        buttonBackMain = ButtonBackMain.getInstance();
-        buttonPause = ButtonPause.getInstance();
-        labelTimer = LabelTimer.getInstance();
-        gameBoard = GameBoard.getInstance();
+        buttonBackMain = new ButtonBackMain(2 * DW, 2 * DH, this);
+        buttonPause = new ButtonPause();
+        labelTimer = new LabelTimer();
         labelPoint = new LabelPoint();
         boxGameEnd = new BoxGameEnd();
+        gameBoard = GameBoard.getInstance();
         imageBackGround = Toolkit.getDefaultToolkit().getImage("res/images/autumn_story.png");
 
         mouseAdapterForCanvasGameOp = new MouseAdapterForCanvasGameOp();
@@ -75,10 +75,6 @@ public class CanvasGameOp extends Canvas implements Runnable {
     }
 
     public static void reset() {
-        ButtonBackMain.reset();
-        ButtonPause.reset();
-//        LabelPoint.reset();
-        LabelTimer.reset();
         GameBoard.reset();
         instance = null;
         System.out.println("Game Reset");

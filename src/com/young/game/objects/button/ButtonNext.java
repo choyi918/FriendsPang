@@ -7,6 +7,7 @@ import java.awt.*;
 public class ButtonNext extends Button{
     private int x;
     private int y;
+
     public ButtonNext() {
         super("button_next_default.png", "button_next_pointed.png");
         x = 0 + 9 * CanvasGameOp.DW;

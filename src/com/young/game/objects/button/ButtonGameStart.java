@@ -5,16 +5,8 @@ import com.young.game.ui.CanvasMain;
 import java.awt.*;
 
 public class ButtonGameStart extends Button{
-    private static ButtonGameStart instance;
-
-    private ButtonGameStart() {
+    public ButtonGameStart() {
         super("button_game_start.png", "button_game_start_pointed.png");
-    }
-
-    public static ButtonGameStart getInstance() {
-        if (instance == null)
-            instance = new ButtonGameStart();
-        return instance;
     }
 
     @Override

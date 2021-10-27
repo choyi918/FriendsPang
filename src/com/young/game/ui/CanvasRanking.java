@@ -1,7 +1,7 @@
 package com.young.game.ui;
 
 import com.young.game.objects.Box.BoxRankingNameViewer;
-import com.young.game.objects.button.ButtonBackMainTwo;
+import com.young.game.objects.button.ButtonBackMain;
 import com.young.game.objects.pointViewer.LabelPoint;
 
 import java.awt.*;
@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class CanvasRanking extends Canvas implements Runnable{
     private Image imageRanking;
     private Image imageBackGround;
-    private ButtonBackMainTwo buttonBackMainTwo;
+    private ButtonBackMain buttonBackMain;
 
     private RankingInfo[] rankingInfos;
     private BoxRankingNameViewer[] boxNameViewerTwos;
@@ -38,7 +38,7 @@ public class CanvasRanking extends Canvas implements Runnable{
     private CanvasRanking() {
         setSize(WIDTH, HEIGHT); // 22는 메뉴바 height
 
-        buttonBackMainTwo = ButtonBackMainTwo.getInstance();
+        buttonBackMain = new ButtonBackMain(0 + 9 * DW, 0 + 20 * DH, this);
         imageBackGround = Toolkit.getDefaultToolkit().getImage("res/images/autumn_story.png");
         imageRanking = Toolkit.getDefaultToolkit().getImage("res/images/title_ranking.png");
 
@@ -69,10 +69,10 @@ public class CanvasRanking extends Canvas implements Runnable{
                 int eX = e.getX();
                 int eY = e.getY();
 
-                buttonBackMainTwo.outpointButton();
+                buttonBackMain.outpointButton();
                 if (0 + 9 * DW <= eX && eX <= 0 + 9 * DW + 4 * DW
                         && 0 + 20 * DH <= eY && eY <= 0 + 20 * DH + DH)
-                    buttonBackMainTwo.pointButton();
+                    buttonBackMain.pointButton();
             }
         };
 
@@ -148,7 +148,7 @@ public class CanvasRanking extends Canvas implements Runnable{
 
         buffG.setColor(Color.BLACK);
         buffG.drawImage(imageRanking, 0 + 8 * DW, 0 + 2 * DH, 6 * DW, DH, this);
-        buttonBackMainTwo.draw(buffG);
+        buttonBackMain.draw(buffG);
 
         for (int i = 0; i < 8; i++) {
             buffG.setColor(new Color(0xFF, 0xFF, 0xFF, 230));

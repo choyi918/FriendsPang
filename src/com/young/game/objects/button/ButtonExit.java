@@ -5,16 +5,8 @@ import com.young.game.ui.CanvasMain;
 import java.awt.*;
 
 public class ButtonExit extends Button{
-    private static ButtonExit instance;
-
-    private ButtonExit() {
+    public ButtonExit() {
         super("button_exit.png","button_exit_pointed.png");
-    }
-
-    public static ButtonExit getInstance() {
-        if (instance == null)
-            instance = new ButtonExit();
-        return instance;
     }
 
     @Override

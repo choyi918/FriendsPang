@@ -5,22 +5,10 @@ import com.young.game.ui.CanvasGameOp;
 import java.awt.*;
 
 public class LabelTimer {
-    private static LabelTimer instance;
     private ImageTimeIndicator imageTimeIndicator;
 
-    private LabelTimer() {
-        imageTimeIndicator = ImageTimeIndicator.getInstance();
-    }
-
-    public static LabelTimer getInstance() {
-        if (instance == null)
-            instance = new LabelTimer();
-        return instance;
-    }
-
-    public static void reset() {
-        ImageTimeIndicator.getInstance().reset();
-        instance = null;
+    public LabelTimer() {
+        imageTimeIndicator = new ImageTimeIndicator();
     }
 
     public boolean isTimeout() {
