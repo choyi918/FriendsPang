@@ -1,18 +1,18 @@
 package com.young.game.objects.Box;
 
 import com.young.game.objects.button.*;
-import com.young.game.ui.CanvasRankingInput;
+import com.young.game.ui.CanvasRanking;
 
 import java.awt.*;
 import java.util.LinkedList;
 
-public class BoxNameViewerTwo {
+public class BoxRankingNameViewer {
     private String name;
     private LinkedList<ButtonChar> buttonCharsOfName;
     private int x;
     private int y;
 
-    public BoxNameViewerTwo(String name, int x, int y) {
+    public BoxRankingNameViewer(String name, int x, int y) {
         buttonCharsOfName = new LinkedList<>();
         this.name = name;
         this.x = x;
@@ -111,10 +111,10 @@ public class BoxNameViewerTwo {
     }
 
     public void draw(Graphics g) {
-        CanvasRankingInput observer = CanvasRankingInput.getInstance();
+        CanvasRanking observer = CanvasRanking.getInstance();
 
-        int dw = CanvasRankingInput.DW;
-        int dh = CanvasRankingInput.DH;
+        int dw = CanvasRanking.DW;
+        int dh = CanvasRanking.DH;
 
         for (int i = 0; i < buttonCharsOfName.size(); i++) {
             Image image = buttonCharsOfName.get(i).getImage();

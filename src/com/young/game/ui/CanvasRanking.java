@@ -1,6 +1,6 @@
 package com.young.game.ui;
 
-import com.young.game.objects.Box.BoxNameViewerTwo;
+import com.young.game.objects.Box.BoxRankingNameViewer;
 import com.young.game.objects.button.ButtonBackMainTwo;
 import com.young.game.objects.pointViewer.LabelPoint;
 
@@ -18,7 +18,7 @@ public class CanvasRanking extends Canvas implements Runnable{
     private ButtonBackMainTwo buttonBackMainTwo;
 
     private RankingInfo[] rankingInfos;
-    private BoxNameViewerTwo[] boxNameViewerTwos;
+    private BoxRankingNameViewer[] boxNameViewerTwos;
     private LabelPoint[] labelPointTwos;
 
     private static CanvasRanking instance;
@@ -42,7 +42,7 @@ public class CanvasRanking extends Canvas implements Runnable{
         imageBackGround = Toolkit.getDefaultToolkit().getImage("res/images/autumn_story.png");
         imageRanking = Toolkit.getDefaultToolkit().getImage("res/images/title_ranking.png");
 
-        boxNameViewerTwos = new BoxNameViewerTwo[8];
+        boxNameViewerTwos = new BoxRankingNameViewer[8];
         labelPointTwos = new LabelPoint[8];
         try {
             loadRankingInfo();
@@ -127,7 +127,7 @@ public class CanvasRanking extends Canvas implements Runnable{
 
         for (int i = 0; i < boxNameViewerTwos.length; i++)
             if (i < rankingInfos.length)
-                boxNameViewerTwos[i] = new BoxNameViewerTwo(rankingInfos[i].getName(), 4 * DW, 4 * DH + i * 2 * DH);
+                boxNameViewerTwos[i] = new BoxRankingNameViewer(rankingInfos[i].getName(), 4 * DW, 4 * DH + i * 2 * DH);
 
         for (int i = 0; i < labelPointTwos.length; i++)
             if (i < rankingInfos.length)
@@ -155,7 +155,7 @@ public class CanvasRanking extends Canvas implements Runnable{
             buffG.fillRect(4 * DW, 4 * DH + i * 2 * DH, 14 * DW, DH);
             buffG.setColor(Color.BLACK);
 
-            BoxNameViewerTwo b = boxNameViewerTwos[i];
+            BoxRankingNameViewer b = boxNameViewerTwos[i];
             if (b != null)
                 b.draw(buffG);
 

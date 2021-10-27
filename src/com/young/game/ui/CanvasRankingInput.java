@@ -1,6 +1,6 @@
 package com.young.game.ui;
 
-import com.young.game.objects.Box.BoxNameViewer;
+import com.young.game.objects.Box.BoxRankingInputNameViewer;
 import com.young.game.objects.GameBoard;
 import com.young.game.objects.button.*;
 import com.young.game.objects.pointViewer.LabelPoint;
@@ -19,7 +19,7 @@ public class CanvasRankingInput extends Canvas implements Runnable {
     private ButtonArrow buttonArrow;
     private ButtonOk buttonOk;
     private LinkedList<ButtonChar> buttonChars;
-    private LabelPoint labelPointRenew;
+    private LabelPoint labelPoint;
     private Image imageBackGround;
     private int point;
     private MouseAdapterForCanvasRankingInput mouseAdapterForCanvasRankingInput;
@@ -46,7 +46,7 @@ public class CanvasRankingInput extends Canvas implements Runnable {
 
         buttonChars = new LinkedList<>();
         buttons = new ButtonChar[ALPHABET_SIZE];
-        labelPointRenew = new LabelPoint(GameBoard.getInstance().getPoint(), 11 * DW, 2 * DH, 200);
+        labelPoint = new LabelPoint(GameBoard.getInstance().getPoint(), 11 * DW, 2 * DH, 200);
 
         int i = 0;
         buttons[i++] = new ButtonA();
@@ -116,9 +116,13 @@ public class CanvasRankingInput extends Canvas implements Runnable {
         Graphics buffG = buff.getGraphics();
 
         buffG.drawImage(imageBackGround, 0, 0, getWidth(), getHeight(), this);
-        labelPointRenew.draw(buffG);
+        labelPoint.draw(buffG);
 
-        new BoxNameViewer(buttonChars).draw(buffG);
+        buffG.setColor(new Color(0xFF, 0xFF, 0xFF, 150));
+        buffG.fillRect(0 + 3 * DW - DW / 4, 0 + 5 * DH, 9 * (2 * DW - DW / 4),2 * DH - DH / 4);
+
+        buffG.setColor(Color.BLACK);
+        new BoxRankingInputNameViewer(buttonChars).draw(buffG);
 
         for (ButtonChar b : buttons)
             b.draw(buffG);
@@ -137,7 +141,7 @@ public class CanvasRankingInput extends Canvas implements Runnable {
     @Override
     public void run() {
         while (true) {
-            labelPointRenew.update();
+            labelPoint.update();
             repaint();
             validate();
             try {
