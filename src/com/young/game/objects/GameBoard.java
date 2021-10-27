@@ -59,8 +59,8 @@ public class GameBoard {
     }
 
     /* Getters */
-    public Friend[][] getBoard() {
-        return board;
+    public Friend getFriend(int x, int y) {
+        return board[y][x];
     }
 
     public LinkedList<Friend> getLinkedListOfBoard() {

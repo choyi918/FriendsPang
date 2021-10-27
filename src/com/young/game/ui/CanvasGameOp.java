@@ -316,8 +316,8 @@ public class CanvasGameOp extends Canvas implements Runnable {
                 return;
             }
 
-            Friend f1 = gameBoard.getBoard()[boardY1][boardX1];
-            Friend f2 = gameBoard.getBoard()[boardY2][boardX2];
+            Friend f1 = gameBoard.getFriend(boardX1, boardY1);
+            Friend f2 = gameBoard.getFriend(boardX2, boardY2);
             gameBoard.swap(f1, f2);
             playSound("move_friend.wav");
             initializePressedAndReleasedXY();

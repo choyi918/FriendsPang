@@ -101,13 +101,12 @@ public abstract class Friend {
         int fBoardY = friend.getBoardY();
         int dw = CanvasGameOp.DW;
         int dh = CanvasGameOp.DH;
-        GameBoard inBoard = GameBoard.getInstance();
 
-        if ((boardY < inBoard.getBoard().length - 1 && boardX == fBoardX && boardY + 1 == fBoardY)
+        if ((boardY < GameBoard.BOARD_LENGTH - 1 && boardX == fBoardX && boardY + 1 == fBoardY)
                 || (boardY > 0 && boardX == fBoardX && boardY - 1 == fBoardY))
             validCanvasY = friend.getBoardY() * (2 * dh) + (4 * dh);
 //            validCanvasY = friend.getCanvasY();
-        else if ((boardX < inBoard.getBoard().length - 1 && boardY == fBoardY && boardX + 1 == fBoardX)
+        else if ((boardX < GameBoard.BOARD_LENGTH - 1 && boardY == fBoardY && boardX + 1 == fBoardX)
                 || (boardX > 0 && boardY == fBoardY && boardX - 1 == fBoardX))
             validCanvasX = friend.getBoardX() * (2 * dw) + (4 * dw);
 //            validCanvasX = friend.getCanvasX(); // -> 버그 : 연속적으로 마우스이벤트에 의한 교환이 일어났을 때 화면상으로 돌이 제자리를 찾아 그려지지 않음
