@@ -122,12 +122,12 @@ public class CanvasGameOp extends Canvas implements Runnable {
 
             if (!labelTimer.isTimeout()) {
 
-                if (gameBoard.getFriendsArrayList().size() == 0)
-                    gameBoard.initializeToVerifiedBoard();
+                if (gameBoard.getLinkedListOfBoard().size() == 0)
+                    gameBoard.makeQueueOfVerifiedInitializedBoard();
 
                 gameBoard.fillTopLine();
 
-                for (Friend f : gameBoard.getFriendsArrayList())
+                for (Friend f : gameBoard.getLinkedListOfBoard())
                     f.update();
 
                 /* 49개 다 꽉 차고, Friends들이 다 제자리에 온전히 위치한 상태에서만 실행되도록.*/
@@ -164,7 +164,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
     }
 
     private boolean isAllCompleteToMove() {
-        for (Friend f : gameBoard.getFriendsArrayList()) {
+        for (Friend f : gameBoard.getLinkedListOfBoard()) {
             if (!f.isCompleteToMove())
                 return false;
         }

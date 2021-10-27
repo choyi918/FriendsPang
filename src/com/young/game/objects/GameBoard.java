@@ -10,14 +10,8 @@ import com.young.game.objects.Friends.Neo;
 import com.young.game.objects.Friends.Ryan;
 import com.young.game.objects.Friends.Tube;
 import com.young.game.ui.CanvasGameOp;
-import com.young.game.ui.CanvasMain;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import java.awt.*;
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
@@ -28,9 +22,9 @@ public class GameBoard {
     private final int BOARD_LENGTH = 7;
     private int point;
     private Friend[][] board;
-    private ArrayList<Friend> friendsArrayList; // 보드에 만들에 만든어진 Friends 기억, 처음엔 HashSet으로 했지만 순서가 중요하다는 것을 깨닫고 ArrayList씀
-    private Friend[] latestMovedFriends;
-    private LinkedList<Friend> LLFromVerifiedTmpBoard;
+    private Friend[] latestSwappedFriends;
+    private LinkedList<Friend> linkedListOfBoard; // 보드에 만들에 만든어진 Friends 기억, 처음엔 HashSet으로 했지만 순서가 중요하다는 것을 깨닫고 ArrayList씀
+    private FriendQueue queueOfVerifiedInitializedBoard;
 
     //for test
     private int previousPoint;
@@ -46,9 +40,9 @@ public class GameBoard {
 
     private GameBoard() {
         board = new Friend[BOARD_LENGTH][BOARD_LENGTH];
-        friendsArrayList = new ArrayList<>();
-        latestMovedFriends = new Friend[2];
-        LLFromVerifiedTmpBoard = new LinkedList<>();
+        latestSwappedFriends = new Friend[2];
+        linkedListOfBoard = new LinkedList<>();
+        queueOfVerifiedInitializedBoard = new FriendQueue();
     }
 
     public static GameBoard getInstance() {
@@ -67,8 +61,8 @@ public class GameBoard {
         return board;
     }
 
-    public ArrayList<Friend> getFriendsArrayList() {
-        return friendsArrayList;
+    public LinkedList<Friend> getLinkedListOfBoard() {
+        return linkedListOfBoard;
     }
 
     public int getPoint() {
@@ -84,16 +78,18 @@ public class GameBoard {
     }
 
     public void update() {
-        if (latestMovedFriends[0] != null
-                && latestMovedFriends[1] != null
+        /* 마우스이벤트에의해 swap이 되었다면, 올바른 이동인지 확인 후 그렇지 않다면, 다시 역스왑*/
+        if (latestSwappedFriends[0] != null
+                && latestSwappedFriends[1] != null
                 && !checkValidMoving()) {
-            swap(latestMovedFriends[0], latestMovedFriends[1]);
+            swap(latestSwappedFriends[0], latestSwappedFriends[1]);
         }
-        latestMovedFriends = new Friend[2];
 
-        int removedCount = remove();
+        latestSwappedFriends[0] = null;
+        latestSwappedFriends[1] = null;
+
+        int removedCount = remove(board);
         addPoints(removedCount);
-
 
         // for test
         if (previousPoint != point) {
@@ -108,6 +104,7 @@ public class GameBoard {
 
         g.setColor(Color.BLACK);
         g.fillRect(defaultX, defaultY, 7 * 2 * dw, 7 * 2 * dh);
+
         for (int y = 0; y < BOARD_LENGTH; y++)
             for (int x = 0; x < BOARD_LENGTH; x++) {
                 g.setColor(Color.WHITE);
@@ -115,6 +112,7 @@ public class GameBoard {
                 if (board[y][x] != null)
                     board[y][x].draw(g);
             }
+
         g.setColor(Color.BLACK);
         g.drawRect(defaultX, defaultY, 7 * 2 * dw, 7 * 2 * dh);
     }
@@ -134,16 +132,15 @@ public class GameBoard {
     public void fillTopLine() {
         for (int x = 0; x < BOARD_LENGTH; x++)
             if (board[0][x] == null) {
-                Friend f;
-                if (LLFromVerifiedTmpBoard.size() != 0) {
-                    f = LLFromVerifiedTmpBoard.getFirst();
-                    LLFromVerifiedTmpBoard.removeFirst();
-                }
+                Friend f = null;
+
+                if (queueOfVerifiedInitializedBoard.size() != 0)
+                    f = queueOfVerifiedInitializedBoard.dequeue();
                 else
                     f = getElementRandomly(x, 0);
 
                 board[0][x] = f;
-                friendsArrayList.add(f);
+                linkedListOfBoard.add(f);
             }
     }
 
@@ -156,7 +153,6 @@ public class GameBoard {
         int x2 = f2.getBoardX();
         int y2 = f2.getBoardY();
 
-
         Friend tmp = board[y1][x1];
         board[y1][x1] = board[y2][x2];
         board[y2][x2] = tmp;
@@ -167,8 +163,8 @@ public class GameBoard {
         f2.setBoardX(x1);
         f2.setBoardY(y1);
 
-        latestMovedFriends[0] = f1;
-        latestMovedFriends[1] = f2;
+        latestSwappedFriends[0] = f1;
+        latestSwappedFriends[1] = f2;
     }
 
     private Friend getElementRandomly(int x, int y) {
@@ -207,14 +203,14 @@ public class GameBoard {
     }
 
     /* for removing valid objects sequence and calculate points */
-    private int remove() {
+    private int remove(Friend[][] board) {
         HashSet<Friend> removals = new HashSet<>();
 
         /* 판을 다 훑으며 제거할 수 있는 객체들을 넣어놓음, 중복 방지를 위해 hashSet 자료형을 이용 */
         for (int y = 0; y < BOARD_LENGTH; y++) {
             for (int x = 0; x < BOARD_LENGTH; x++) {
                 Point p = new Point(x, y);
-                if (isRemovableVertical(p) || isRemovableHorizontal(p))
+                if (isRemovableVertical(board, p) || isRemovableHorizontal(board, p))
                     removals.add(board[y][x]);
             }
         }
@@ -231,8 +227,11 @@ public class GameBoard {
             board[y][x] = null;
         }
 
-        for (Friend f : removals)
-            friendsArrayList.remove(f);
+        /* !!!!!!!!!!!!!!!! 이거 없앨 수 있으면 없애야함.*/
+        if (board == this.board) {
+            for (Friend f : removals)
+                linkedListOfBoard.remove(f);
+        }
 
         return removals.size(); // 제거한 객체의 수를 반환
     }
@@ -247,14 +246,14 @@ public class GameBoard {
 
     /* obj가 교환했을 때 움직임이 타당한지(돌이 3개이상 배치가 되었는지) 체크해서 배치가 되었으면 참값을 반환*/
     private boolean checkValidMoving() {
-        Friend f1 = latestMovedFriends[0];
-        Friend f2 = latestMovedFriends[1];
+        Friend f1 = latestSwappedFriends[0];
+        Friend f2 = latestSwappedFriends[1];
         Point p1 = new Point(f1.getBoardX(), f1.getBoardY());
         Point p2 = new Point(f2.getBoardX(), f2.getBoardY());
-        return isRemovableHorizontal(p1) || isRemovableVertical(p1) || isRemovableHorizontal(p2) || isRemovableVertical(p2);
+        return isRemovableHorizontal(board, p1) || isRemovableVertical(board, p1) || isRemovableHorizontal(board, p2) || isRemovableVertical(board, p2);
     }
 
-    private boolean isRemovableVertical(Point p) {
+    private boolean isRemovableVertical(Friend[][] board, Point p) {
         /* '|' 방향 검사 */
         int count = 0;
         int x = (int)p.getX();
@@ -287,7 +286,7 @@ public class GameBoard {
             return false;
     }
 
-    private boolean isRemovableHorizontal(Point p) {
+    private boolean isRemovableHorizontal(Friend[][] board, Point p) {
         /* 'ㅡ' 방향 검사 */
 
         int count = 0;
@@ -326,7 +325,7 @@ public class GameBoard {
     public boolean checkValidationBoardAndClearBoard() {
         /* 게임을 진행할 수 있는 보드인지 검사하고 그렇지 않으면 새로 보드를 갱신하는 메서드*/
         /* 보드를 깊은 복사한다. 테스르를 위해 움직여야하므로*/
-        Friend[][] deepCopiedBoard = copyGameBoard();
+        Friend[][] deepCopiedBoard = copyDeeplyGameBoardForValidation();
 
         for (int y = 0; y < 7; y++) {
             for (int x = 0; x < 7; x++)
@@ -340,7 +339,7 @@ public class GameBoard {
                 board[y][x] = null;
         }
 
-        friendsArrayList.clear();
+        linkedListOfBoard.clear();
 
         System.out.println("invalid board");
         return false;
@@ -355,12 +354,12 @@ public class GameBoard {
         if (y > 0) {
             Point p2 = new Point(x, y - 1);
 
-            swapForValidating(deepCopiedBoard, p, p2);
-            boolean bP1RemovableVertical = preCheckRemovableVertical(deepCopiedBoard, p);
-            boolean bP1RemovableHorizon = preCheckRemovableHorizontal(deepCopiedBoard, p);
-            boolean bP2RemovableVertical = preCheckRemovableVertical(deepCopiedBoard, p2);
-            boolean bP2RemovableHorizon = preCheckRemovableHorizontal(deepCopiedBoard, p2);
-            swapForValidating(deepCopiedBoard, p, p2);
+            swapForValidation(deepCopiedBoard, p, p2);
+            boolean bP1RemovableVertical = isRemovableVertical(deepCopiedBoard, p);
+            boolean bP1RemovableHorizon = isRemovableHorizontal(deepCopiedBoard, p);
+            boolean bP2RemovableVertical = isRemovableVertical(deepCopiedBoard, p2);
+            boolean bP2RemovableHorizon = isRemovableHorizontal(deepCopiedBoard, p2);
+            swapForValidation(deepCopiedBoard, p, p2);
 
             if (bP1RemovableHorizon || bP1RemovableVertical || bP2RemovableHorizon || bP2RemovableVertical)
                 return true;
@@ -370,12 +369,12 @@ public class GameBoard {
         if (y < BOARD_LENGTH - 1) {
             Point p2 = new Point(x, y + 1);
 
-            swapForValidating(deepCopiedBoard, p, p2);
-            boolean bP1RemovableVertical = preCheckRemovableVertical(deepCopiedBoard, p);
-            boolean bP1RemovableHorizon = preCheckRemovableHorizontal(deepCopiedBoard, p);
-            boolean bP2RemovableVertical = preCheckRemovableVertical(deepCopiedBoard, p2);
-            boolean bP2RemovableHorizon = preCheckRemovableHorizontal(deepCopiedBoard, p2);
-            swapForValidating(deepCopiedBoard, p, p2);
+            swapForValidation(deepCopiedBoard, p, p2);
+            boolean bP1RemovableVertical = isRemovableVertical(deepCopiedBoard, p);
+            boolean bP1RemovableHorizon = isRemovableHorizontal(deepCopiedBoard, p);
+            boolean bP2RemovableVertical = isRemovableVertical(deepCopiedBoard, p2);
+            boolean bP2RemovableHorizon = isRemovableHorizontal(deepCopiedBoard, p2);
+            swapForValidation(deepCopiedBoard, p, p2);
 
             if (bP1RemovableHorizon || bP1RemovableVertical || bP2RemovableHorizon || bP2RemovableVertical)
                 return true;
@@ -385,12 +384,12 @@ public class GameBoard {
         if (x > 0) {
             Point p2 = new Point(x - 1, y);
 
-            swapForValidating(deepCopiedBoard, p, p2);
-            boolean bP1RemovableVertical = preCheckRemovableVertical(deepCopiedBoard, p);
-            boolean bP1RemovableHorizon = preCheckRemovableHorizontal(deepCopiedBoard, p);
-            boolean bP2RemovableVertical = preCheckRemovableVertical(deepCopiedBoard, p2);
-            boolean bP2RemovableHorizon = preCheckRemovableHorizontal(deepCopiedBoard, p2);
-            swapForValidating(deepCopiedBoard, p, p2);
+            swapForValidation(deepCopiedBoard, p, p2);
+            boolean bP1RemovableVertical = isRemovableVertical(deepCopiedBoard, p);
+            boolean bP1RemovableHorizon = isRemovableHorizontal(deepCopiedBoard, p);
+            boolean bP2RemovableVertical = isRemovableVertical(deepCopiedBoard, p2);
+            boolean bP2RemovableHorizon = isRemovableHorizontal(deepCopiedBoard, p2);
+            swapForValidation(deepCopiedBoard, p, p2);
 
             if (bP1RemovableHorizon || bP1RemovableVertical || bP2RemovableHorizon || bP2RemovableVertical)
                 return true;
@@ -400,12 +399,12 @@ public class GameBoard {
         if (x < BOARD_LENGTH - 1) {
             Point p2 = new Point(x + 1, y);
 
-            swapForValidating(deepCopiedBoard, p, p2);
-            boolean bP1RemovableVertical = preCheckRemovableVertical(deepCopiedBoard, p);
-            boolean bP1RemovableHorizon = preCheckRemovableHorizontal(deepCopiedBoard, p);
-            boolean bP2RemovableVertical = preCheckRemovableVertical(deepCopiedBoard, p2);
-            boolean bP2RemovableHorizon = preCheckRemovableHorizontal(deepCopiedBoard, p2);
-            swapForValidating(deepCopiedBoard, p, p2);
+            swapForValidation(deepCopiedBoard, p, p2);
+            boolean bP1RemovableVertical = isRemovableVertical(deepCopiedBoard, p);
+            boolean bP1RemovableHorizon = isRemovableHorizontal(deepCopiedBoard, p);
+            boolean bP2RemovableVertical = isRemovableVertical(deepCopiedBoard, p2);
+            boolean bP2RemovableHorizon = isRemovableHorizontal(deepCopiedBoard, p2);
+            swapForValidation(deepCopiedBoard, p, p2);
 
             if (bP1RemovableHorizon || bP1RemovableVertical || bP2RemovableHorizon || bP2RemovableVertical)
                 return true;
@@ -414,79 +413,7 @@ public class GameBoard {
         return false;
     }
 
-    private boolean preCheckRemovableHorizontal(Friend[][] deepCopiedBoard, Point p) {
-        /* 'ㅡ' 방향 검사 */
-
-        int count = 0;
-        int x = (int)p.getX();
-        int y = (int)p.getY();
-        Friend friendAtP = deepCopiedBoard[y][x];
-
-        /* 왼쪽 방향 검사 */
-        while (true) {
-            if (0 <= x && friendAtP.getName().equals(deepCopiedBoard[y][x].getName())) {
-                count++;
-            }
-            else
-                break;
-
-            x--;
-        }
-
-        /* 오른쪽 방향 검사*/
-        x = (int)p.getX() + 1;
-        while (true) {
-            if (x < BOARD_LENGTH && friendAtP.getName().equals(deepCopiedBoard[y][x].getName())) {
-                count++;
-            }
-            else
-                break;
-
-            x++;
-        }
-
-        if (count >= 3)
-            return true;
-        else
-            return false;
-    }
-
-    private boolean preCheckRemovableVertical(Friend[][] deepCopiedBoard, Point p) {
-        /* '|' 방향 검사 */
-        int count = 0;
-        int x = (int)p.getX();
-        int y = (int)p.getY();
-        Friend friendAtP = deepCopiedBoard[y][x];
-
-        /* 위쪽 방향 검사 */
-        while (true) {
-            if (0 <= y && friendAtP.getName().equals(deepCopiedBoard[y][x].getName()))
-                count++;
-            else
-                break;
-
-            y--;
-        }
-
-        /* 아래쪽 방향 검사 */
-        y = (int)p.getY() + 1;
-
-        while (true) {
-            if (y < BOARD_LENGTH && friendAtP.getName().equals(deepCopiedBoard[y][x].getName()))
-                count++;
-            else
-                break;
-
-            y++;
-        }
-
-        if (count >= 3)
-            return true;
-        else
-            return false;
-    }
-
-    private Friend[][] copyGameBoard() {
+    private Friend[][] copyDeeplyGameBoardForValidation() {
         Friend[][] deepCopyBoard = new Friend[BOARD_LENGTH][BOARD_LENGTH];
 
         for (int y = 0; y < BOARD_LENGTH; y++) {
@@ -526,7 +453,7 @@ public class GameBoard {
         return deepCopyBoard;
     }
 
-    private void swapForValidating(Friend[][] deepCopiedBoard, Point p1, Point p2) {
+    private void swapForValidation(Friend[][] deepCopiedBoard, Point p1, Point p2) {
         int x1 = (int)p1.getX();
         int y1 = (int)p1.getY();
         int x2 = (int)p2.getX();
@@ -552,14 +479,14 @@ public class GameBoard {
     }
 
     /* 3개 이상의 연속 배치가 없고, 답이 있는 보드를 검증하여 판을 새로 갱신할 때 씀 - 1. 처음 게임을 시작할때 2. 답이 없는경우 판을 다시 갱신할 때 */
-    public void initializeToVerifiedBoard() {
-        Friend[][] tmpBoard = initializeTmpBoard();
+    public void makeQueueOfVerifiedInitializedBoard() {
+        Friend[][] verifiedBoard = makeVerifiedInitializedBoard();
 
         int dw = CanvasGameOp.DW;
 
         for (int y = 0; y < BOARD_LENGTH; y++) {
             for (int x = 0; x < BOARD_LENGTH; x++) {
-                Friend f = tmpBoard[BOARD_LENGTH - 1 - y][x];
+                Friend f = verifiedBoard[BOARD_LENGTH - 1 - y][x];
                 /* 보드의 탑라인으로 boardY, canvasY, validCanvasY을 초기화 -> 죄다 */
                 f.setBoardY(0);
                 f.setBoardX(x);
@@ -567,124 +494,35 @@ public class GameBoard {
                 f.setCanvasY(defaultY);
                 f.setValidCanvasX(defaultX + x * 2 * dw);
                 f.setValidCanvasY(defaultY);
-                LLFromVerifiedTmpBoard.addLast(f);
+                /* bottom - left 부터 top - right까지 queue를 만듦 */
+                queueOfVerifiedInitializedBoard.enqueue(f);
             }
         }
     }
 
-    private Friend[][] initializeTmpBoard() {
+    private Friend[][] makeVerifiedInitializedBoard() {
         while (true) {
-            Friend[][] tmpBoard = new Friend[BOARD_LENGTH][BOARD_LENGTH];
+            Friend[][] verifiedInitializedBoard = new Friend[BOARD_LENGTH][BOARD_LENGTH];
 
             /* 초기화 된 tmpBoard를 랜덤으로 채우기*/
             for (int y = 0; y < BOARD_LENGTH; y++)
                 for (int x = 0; x < BOARD_LENGTH; x++)
-                    tmpBoard[y][x] = getElementRandomly(x, y);
+                    verifiedInitializedBoard[y][x] = getElementRandomly(x, y);
 
-            while (removeForInitializeTmpBoard(tmpBoard) != 0) {
+            while (remove(verifiedInitializedBoard) != 0) {
                 /* 3개 이상으로 연속배치된 object들 지우고 난 후 그 자리에 다시 채우기 */
                 for (int y = 0; y < BOARD_LENGTH; y++)
                     for (int x = 0; x < BOARD_LENGTH; x++)
-                        if (tmpBoard[y][x] == null)
-                            tmpBoard[y][x] = getElementRandomly(x, y);
+                        if (verifiedInitializedBoard[y][x] == null)
+                            verifiedInitializedBoard[y][x] = getElementRandomly(x, y);
             }
 
             /* 게임을 진행할 수 있는 board인지 판단, 진행가능하면 바로 tmpBoard를 반환*/
             for (int y = 0; y < BOARD_LENGTH; y++)
                 for (int x = 0; x < BOARD_LENGTH; x++)
-                    if (preCheckRemovablePositionWhenMoving(tmpBoard, new Point(x, y)))
-                        return tmpBoard;
+                    if (preCheckRemovablePositionWhenMoving(verifiedInitializedBoard, new Point(x, y)))
+                        return verifiedInitializedBoard;
         }
-    }
-
-    private int removeForInitializeTmpBoard(Friend[][] tmpBoard) {
-        HashSet<Friend> removals = new HashSet<>();
-
-        /* 판을 다 훑으며 제거할 수 있는 객체들을 넣어놓음, 중복 방지를 위해 hashSet 자료형을 이용 */
-        for (int y = 0; y < BOARD_LENGTH; y++) {
-            for (int x = 0; x < BOARD_LENGTH; x++) {
-                Point p = new Point(x, y);
-                if (isRemovableVertical(tmpBoard, p) || isRemovableHorizontal(tmpBoard, p))
-                    removals.add(tmpBoard[y][x]);
-            }
-        }
-
-        /* 제거할 객체들의 자리에 null 값을 넣음*/
-        for (Friend f : removals) {
-            int x = f.getBoardX();
-            int y = f.getBoardY();
-            tmpBoard[y][x] = null;
-        }
-
-        return removals.size(); // 제거한 객체의 수를 반환
-    }
-
-    private boolean isRemovableVertical(Friend[][] tmpBoard, Point p) {
-        /* '|' 방향 검사 */
-        int count = 0;
-        int x = (int)p.getX();
-        int y = (int)p.getY();
-        Friend friendAtP = tmpBoard[y][x];
-
-        /* 위쪽 방향 검사 */
-        while (true) {
-            if (0 <= y && friendAtP.getName().equals(tmpBoard[y][x].getName()))
-                count++;
-            else
-                break;
-            y--;
-        }
-
-        /* 아래쪽 방향 검사 */
-        y = (int)p.getY() + 1;
-
-        while (true) {
-            if (y < tmpBoard.length && friendAtP.getName().equals(tmpBoard[y][x].getName()))
-                count++;
-            else
-                break;
-            y++;
-        }
-
-        if (count >= 3)
-            return true;
-        else
-            return false;
-    }
-
-    private boolean isRemovableHorizontal(Friend[][] tmpBoard, Point p) {
-        /* 'ㅡ' 방향 검사 */
-
-        int count = 0;
-        int x = (int)p.getX();
-        int y = (int)p.getY();
-        Friend friendAtP = tmpBoard[y][x];
-
-        /* 왼쪽 방향 검사 */
-        while (true) {
-            if (0 <= x && friendAtP.getName().equals(tmpBoard[y][x].getName()))
-                count++;
-            else
-                break;
-
-            x--;
-        }
-
-        /* 오른쪽 방향 검사*/
-        x = (int)p.getX() + 1;
-        while (true) {
-            if (x < tmpBoard.length && friendAtP.getName().equals(tmpBoard[y][x].getName()))
-                count++;
-            else
-                break;
-
-            x++;
-        }
-
-        if (count >= 3)
-            return true;
-        else
-            return false;
     }
 
     /* print board at console for debugging */
