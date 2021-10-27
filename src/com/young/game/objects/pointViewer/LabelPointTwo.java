@@ -1,9 +1,6 @@
 package com.young.game.objects.pointViewer;
 
-import com.young.game.objects.GameBoard;
-import com.young.game.ui.CanvasGameOp;
 import com.young.game.ui.CanvasRanking;
-import com.young.game.ui.CanvasRankingInput;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -19,7 +16,6 @@ public class LabelPointTwo {
         this.x = x;
         this.y = y;
         this.finalPoint = point;
-        System.out.println("label point renew point : " + point);
         imageNums = new LinkedList<>();
         presentPoint = -1;
     }

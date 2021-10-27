@@ -54,9 +54,9 @@ public class CanvasGameOp extends Canvas implements Runnable {
 
         buttonBackMain = ButtonBackMain.getInstance();
         buttonPause = ButtonPause.getInstance();
-        labelPoint = LabelPoint.getInstance();
         labelTimer = LabelTimer.getInstance();
         gameBoard = GameBoard.getInstance();
+        labelPoint = new LabelPoint();
         boxGameEnd = new BoxGameEnd();
         imageBackGround = Toolkit.getDefaultToolkit().getImage("res/images/autumn_story.png");
 
@@ -77,7 +77,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
     public static void reset() {
         ButtonBackMain.reset();
         ButtonPause.reset();
-        LabelPoint.reset();
+//        LabelPoint.reset();
         LabelTimer.reset();
         GameBoard.reset();
         instance = null;

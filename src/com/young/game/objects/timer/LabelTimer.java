@@ -1,6 +1,5 @@
 package com.young.game.objects.timer;
 
-import com.young.game.objects.GameBoard;
 import com.young.game.ui.CanvasGameOp;
 
 import java.awt.*;
@@ -46,9 +45,10 @@ public class LabelTimer {
 
         g.setColor(new Color(0xFF, 0xFF, 0xFF, 100));
         g.fillRect(2 * dw, 19 * dh, 18 * dw, dh);
-//        g.setColor(Color.WHITE);
+
         g.setColor(new Color(0xFF, 0xFF, 0xFF, 200));
         g.fillRect(2 * dw, 19 * dh, imageTimeIndicator.getX() - 2 * dw, dh);
+
         g.setColor(Color.BLACK);
         imageTimeIndicator.draw(g);
     }

@@ -44,7 +44,7 @@ public class GameBoard {
         board = new Friend[BOARD_LENGTH][BOARD_LENGTH];
         latestSwappedFriends = new Friend[2];
         linkedListOfBoard = new LinkedList<>();
-        queueOfVerifiedInitializedBoard = new GameBoardQueue();
+        queueOfVerifiedInitializedBoard = new GameBoardQueue<>();
     }
 
     public static GameBoard getInstance() {
@@ -75,7 +75,7 @@ public class GameBoard {
         /* 마우스이벤트에의해 swap이 되었다면, 올바른 이동인지 확인 후 그렇지 않다면, 다시 역스왑*/
         if (latestSwappedFriends[0] != null
                 && latestSwappedFriends[1] != null
-                && !checkValidMoving()) {
+                && !checkFriendMovingValid()) {
             swap(latestSwappedFriends[0], latestSwappedFriends[1]);
         }
 
@@ -114,6 +114,17 @@ public class GameBoard {
     /*
      * game base operation
      */
+    public boolean isEmptyBelow(Friend friend) {
+        return (friend.getBoardY() != BOARD_LENGTH - 1) && (board[friend.getBoardY() + 1][friend.getBoardX()] == null);
+    }
+
+    public void alteredSlipDown(Friend friend) {
+        int x = friend.getBoardX();
+        int y = friend.getBoardY();
+        board[y][x] = null;
+        board[y + 1][x] = friend;
+    }
+
     public boolean isFull() {
         for (int y = 0; y < BOARD_LENGTH; y++) {
             for (int x = 0; x < BOARD_LENGTH; x++)
@@ -234,7 +245,7 @@ public class GameBoard {
      */
 
     /* obj가 교환했을 때 움직임이 타당한지(돌이 3개이상 배치가 되었는지) 체크해서 배치가 되었으면 참값을 반환*/
-    private boolean checkValidMoving() {
+    private boolean checkFriendMovingValid() {
         Friend f1 = latestSwappedFriends[0];
         Friend f2 = latestSwappedFriends[1];
         Point p1 = new Point(f1.getBoardX(), f1.getBoardY());
@@ -322,12 +333,11 @@ public class GameBoard {
                     return true;
         }
 
-        /* board를 초기화*/
+        /* board, linkedListOfBoard 초기화*/
         for (int y = 0; y < BOARD_LENGTH; y++) {
             for (int x = 0; x < BOARD_LENGTH; x++)
                 board[y][x] = null;
         }
-
         linkedListOfBoard.clear();
 
         System.out.println("invalid board");
@@ -455,21 +465,17 @@ public class GameBoard {
         board[y2][x2] = tmp;
 
         Friend f1 = board[y1][x1];
-        if (f1 != null) {
-            f1.setBoardX(x1);
-            f1.setBoardY(y1);
-        }
+        f1.setBoardX(x1);
+        f1.setBoardY(y1);
 
         Friend f2 = board[y2][x2];
-        if (f2 != null) {
-            f2.setBoardX(x2);
-            f2.setBoardY(y2);
-        }
+        f2.setBoardX(x2);
+        f2.setBoardY(y2);
     }
 
     /* 3개 이상의 연속 배치가 없고, 답이 있는 보드를 검증하여 판을 새로 갱신할 때 씀 - 1. 처음 게임을 시작할때 2. 답이 없는경우 판을 다시 갱신할 때 */
     public void makeQueueOfVerifiedInitializedBoard() {
-        Friend[][] verifiedBoard = makeVerifiedInitializedBoard();
+        Friend[][] verifiedBoard = getVerifiedInitializedBoard();
 
         int dw = CanvasGameOp.DW;
 
@@ -489,7 +495,7 @@ public class GameBoard {
         }
     }
 
-    private Friend[][] makeVerifiedInitializedBoard() {
+    private Friend[][] getVerifiedInitializedBoard() {
         while (true) {
             Friend[][] verifiedInitializedBoard = new Friend[BOARD_LENGTH][BOARD_LENGTH];
 
@@ -527,14 +533,4 @@ public class GameBoard {
         }
     }
 
-    public boolean isEmptyBelow(Friend friend) {
-        return friend.getBoardY() != BOARD_LENGTH - 1 && board[friend.getBoardY() + 1][friend.getBoardX()] == null;
-    }
-
-    public void alteredSlipDown(Friend friend) {
-        int x = friend.getBoardX();
-        int y = friend.getBoardY();
-        board[y][x] = null;
-        board[y + 1][x] = friend;
-    }
 }

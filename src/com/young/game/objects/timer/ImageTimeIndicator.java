@@ -5,14 +5,15 @@ import com.young.game.ui.CanvasGameOp;
 import java.awt.*;
 
 public class ImageTimeIndicator {
+    private int x;
+    private int y;
+    private int durationIndex;
+    private boolean bEnd;
+    private boolean bStop;
+
     private static Image image;
     private static ImageTimeIndicator instance;
     private static final int DURATION;
-    private int durationIndex;
-    private int x;
-    private int y;
-    private boolean bEnd;
-    private boolean bStop;
 
     static {
         image = Toolkit.getDefaultToolkit().getImage("res/images/mad_kon.png");
@@ -42,10 +43,12 @@ public class ImageTimeIndicator {
         return y;
     }
 
+    /* Time Over 때 사용 */
     public boolean isEnd() {
         return bEnd;
     }
 
+    /* start(), stop()은 pause 때 사용*/
     public void stop() {
         bStop = true;
     }
@@ -64,9 +67,9 @@ public class ImageTimeIndicator {
                 durationIndex %= DURATION;
             }
             durationIndex++;
-        } else {
-            bEnd = true;
         }
+        else
+            bEnd = true;
     }
 
     public void draw(Graphics g) {

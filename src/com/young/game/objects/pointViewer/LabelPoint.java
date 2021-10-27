@@ -7,31 +7,17 @@ import java.awt.*;
 import java.util.LinkedList;
 
 public class LabelPoint {
-    private static LabelPoint instance;
     private LinkedList<ImageNum> imageNums;
     private int presentPoint;
 
-    private LabelPoint() {
+    public LabelPoint() {
         imageNums = new LinkedList<>();
         presentPoint = -1; // update() 메소드가 getPoint == 0부터 동작하기 위해서
     }
 
-    public static LabelPoint getInstance() {
-        if (instance == null)
-            instance = new LabelPoint();
-        return instance;
-    }
-
-    public static void reset() {
-        instance = null;
-    }
-
     public void draw(Graphics g) {
-        CanvasGameOp observer = CanvasGameOp.getInstance();
-
         int dw = CanvasGameOp.DW;
         int dh = CanvasGameOp.DH;
-
 
         int defaultX = 0 + 11 * dw - (imageNums.size() * dw) / 2 ;
         int defaultY = 2 * dh;
