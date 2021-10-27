@@ -19,27 +19,26 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 
 public class CanvasGameOp extends Canvas implements Runnable {
-    private static CanvasGameOp instance;
+    private boolean bPause;
+    private boolean bRunning;
+    private boolean bPossibleMouseEvent;
+    private Image imageBackGround;
     private ButtonBackMain buttonBackMain;
     private ButtonPause buttonPause;
     private ButtonNext buttonNext;
     private LabelPoint labelPoint;
     private LabelTimer labelTimer;
-    private GameBoard gameBoard;
-    private Image imageBackGround;
     private BoxGameEnd boxGameEnd;
-
+    private GameBoard gameBoard;
     private MouseAdapterForCanvasGameOp mouseAdapterForCanvasGameOp;
-
-    private boolean bPause;
-    private boolean bRunning;
-    private boolean bPossibleMouseEvent;
 
     /*Canvas 22등분 한 후 단위 길이  */
     private static final int WIDTH;
     private static final int HEIGHT;
     public static final int DW;
     public static final int DH;
+
+    private static CanvasGameOp instance;
 
     static {
         WIDTH = 680;
@@ -319,7 +318,6 @@ public class CanvasGameOp extends Canvas implements Runnable {
 
             Friend f1 = gameBoard.getBoard()[boardY1][boardX1];
             Friend f2 = gameBoard.getBoard()[boardY2][boardX2];
-            gameBoard.printBoardForTest();
             gameBoard.swap(f1, f2);
             playSound("move_friend.wav");
             initializePressedAndReleasedXY();

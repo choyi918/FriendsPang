@@ -26,8 +26,8 @@ public abstract class Friend {
 
         int dw = CanvasGameOp.DW;
         int dh = CanvasGameOp.DH;
-        int defaultX = GameBoard.getDefaultX();
-        int defaultY = GameBoard.getDefaultY();
+        int defaultX = GameBoard.DEFAULT_X;
+        int defaultY = GameBoard.DEFAULT_Y;
 
         canvasX = defaultX + boardX * 2 * dw;
         canvasY = defaultY + boardY * 2 * dh;
@@ -115,7 +115,7 @@ public abstract class Friend {
 
     private void slipDown() {
         GameBoard inBoard = GameBoard.getInstance();
-        int defaultY = inBoard.getDefaultY();
+        int defaultY = GameBoard.DEFAULT_Y;
         int dh = CanvasGameOp.DH;
 
         for (int i = 0; i < movingSpeed; i++) {

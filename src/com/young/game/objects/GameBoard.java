@@ -17,32 +17,34 @@ import java.util.LinkedList;
 import java.util.Random;
 
 public class GameBoard {
-    private static GameBoard instance;
-    private final int FRIENDS_COUNT = 8;
-    private final int BOARD_LENGTH = 7;
+    private int previousPoint; // for test
     private int point;
     private Friend[][] board;
     private Friend[] latestSwappedFriends;
     private LinkedList<Friend> linkedListOfBoard; // 보드에 만들에 만든어진 Friends 기억, 처음엔 HashSet으로 했지만 순서가 중요하다는 것을 깨닫고 ArrayList씀
-    private FriendQueue queueOfVerifiedInitializedBoard;
-
-    //for test
-    private int previousPoint;
+    private GameBoardQueue<Friend> queueOfVerifiedInitializedBoard;
 
     /* 게임보드의 Canvas 상 left - top 좌표*/
-    private static int defaultX;
-    private static int defaultY;
+    public static final int DEFAULT_X;
+    public static final int DEFAULT_Y;
+
+    public static final int FRIENDS_COUNT;
+    public static final int BOARD_LENGTH;
+
+    private static GameBoard instance;
 
     static {
-        defaultX = 0 + 4 * CanvasGameOp.DW;
-        defaultY = 0 + 4 * CanvasGameOp.DH;
+        DEFAULT_X = 0 + 4 * CanvasGameOp.DW;
+        DEFAULT_Y = 0 + 4 * CanvasGameOp.DH;
+        FRIENDS_COUNT = 8;
+        BOARD_LENGTH = 7;
     }
 
     private GameBoard() {
         board = new Friend[BOARD_LENGTH][BOARD_LENGTH];
         latestSwappedFriends = new Friend[2];
         linkedListOfBoard = new LinkedList<>();
-        queueOfVerifiedInitializedBoard = new FriendQueue();
+        queueOfVerifiedInitializedBoard = new GameBoardQueue();
     }
 
     public static GameBoard getInstance() {
@@ -67,14 +69,6 @@ public class GameBoard {
 
     public int getPoint() {
         return point;
-    }
-
-    public static int getDefaultX() {
-        return defaultX;
-    }
-
-    public static int getDefaultY() {
-        return defaultY;
     }
 
     public void update() {
@@ -103,18 +97,18 @@ public class GameBoard {
         int dh = CanvasGameOp.DH;
 
         g.setColor(Color.BLACK);
-        g.fillRect(defaultX, defaultY, 7 * 2 * dw, 7 * 2 * dh);
+        g.fillRect(DEFAULT_X, DEFAULT_Y, 7 * 2 * dw, 7 * 2 * dh);
 
         for (int y = 0; y < BOARD_LENGTH; y++)
             for (int x = 0; x < BOARD_LENGTH; x++) {
                 g.setColor(Color.WHITE);
-                g.drawRect(defaultX + x * 2 * dw, defaultY + y * 2 * dh, 2 * dw, 2 * dh);
+                g.drawRect(DEFAULT_X + x * 2 * dw, DEFAULT_Y + y * 2 * dh, 2 * dw, 2 * dh);
                 if (board[y][x] != null)
                     board[y][x].draw(g);
             }
 
         g.setColor(Color.BLACK);
-        g.drawRect(defaultX, defaultY, 7 * 2 * dw, 7 * 2 * dh);
+        g.drawRect(DEFAULT_X, DEFAULT_Y, 7 * 2 * dw, 7 * 2 * dh);
     }
 
     /*
@@ -215,11 +209,6 @@ public class GameBoard {
             }
         }
 
-        // for test
-//        if (removals.size() != 0)
-//            printBoardForTest();
-
-
         /* 제거할 객체들의 자리에 null */
         for (Friend f : removals) {
             int x = f.getBoardX();
@@ -227,7 +216,7 @@ public class GameBoard {
             board[y][x] = null;
         }
 
-        /* !!!!!!!!!!!!!!!! 이거 없앨 수 있으면 없애야함.*/
+        /* 옳은 코드인가? */
         if (board == this.board) {
             for (Friend f : removals)
                 linkedListOfBoard.remove(f);
@@ -490,10 +479,10 @@ public class GameBoard {
                 /* 보드의 탑라인으로 boardY, canvasY, validCanvasY을 초기화 -> 죄다 */
                 f.setBoardY(0);
                 f.setBoardX(x);
-                f.setCanvasX(defaultX + x * 2 * dw);
-                f.setCanvasY(defaultY);
-                f.setValidCanvasX(defaultX + x * 2 * dw);
-                f.setValidCanvasY(defaultY);
+                f.setCanvasX(DEFAULT_X + x * 2 * dw);
+                f.setCanvasY(DEFAULT_Y);
+                f.setValidCanvasX(DEFAULT_X + x * 2 * dw);
+                f.setValidCanvasY(DEFAULT_Y);
                 /* bottom - left 부터 top - right까지 queue를 만듦 */
                 queueOfVerifiedInitializedBoard.enqueue(f);
             }
