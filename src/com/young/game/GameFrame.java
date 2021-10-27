@@ -9,10 +9,8 @@ import javax.swing.JFrame;
 public class GameFrame extends JFrame {
     private static GameFrame instance;
     private CanvasMain canvasMain;
-    private CanvasGameOp canvasGameOp;
-    private CanvasRankingInput canvasRankingInput;
 
-    private GameFrame() {
+    public GameFrame() {
         setSize(680, 702);
         setResizable(false);
         setTitle("Friends Pang");
@@ -22,10 +20,6 @@ public class GameFrame extends JFrame {
         canvasMain = CanvasMain.getInstance();
         canvasMain.requestFocus();
         add(canvasMain);
-//
-//        canvasRankingInput = CanvasRankingInput.getInstance();
-//        canvasRankingInput.requestFocus();
-//        add(CanvasRankingInput.getInstance());
 
         validate();
     }
