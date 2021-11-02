@@ -38,7 +38,7 @@ public class CanvasRanking extends Canvas implements Runnable{
     private CanvasRanking() {
         setSize(WIDTH, HEIGHT); // 22는 메뉴바 height
 
-        buttonBackMain = new ButtonBackMain(0 + 9 * DW, 0 + 20 * DH, this);
+        buttonBackMain = new ButtonBackMain(0 + 9 * DW, 0 + 9 * DW + 4 * DW, 0 + 20 * DH, 0 + 20 * DH + DH, this);
         imageBackGround = Toolkit.getDefaultToolkit().getImage("res/images/autumn_story.png");
         imageRanking = Toolkit.getDefaultToolkit().getImage("res/images/title_ranking.png");
 
@@ -53,26 +53,25 @@ public class CanvasRanking extends Canvas implements Runnable{
         MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int eX = e.getX();
-                int eY = e.getY();
+                int mouseX= e.getX();
+                int mouseY = e.getY();
 
-                if (0 + 9 * DW <= eX && eX <= 0 + 9 * DW + 4 * DW
-                        && 0 + 20 * DH <= eY && eY <= 0 + 20 * DH + DH) {
-                    setVisible(false);
-                    CanvasMain.getInstance().setVisible(true);
-                    instance = null;
-                }
+                buttonBackMain.clickedByMouse(mouseX, mouseY);
+
+//                if (0 + 9 * DW <= eX && eX <= 0 + 9 * DW + 4 * DW
+//                        && 0 + 20 * DH <= eY && eY <= 0 + 20 * DH + DH) {
+//                    setVisible(false);
+//                    CanvasMain.getInstance().setVisible(true);
+//                    instance = null;
+//                }
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                int eX = e.getX();
-                int eY = e.getY();
+                int mouseX = e.getX();
+                int mouseY = e.getY();
 
-                buttonBackMain.outpointButton();
-                if (0 + 9 * DW <= eX && eX <= 0 + 9 * DW + 4 * DW
-                        && 0 + 20 * DH <= eY && eY <= 0 + 20 * DH + DH)
-                    buttonBackMain.pointButton();
+                buttonBackMain.pointedByMouse(mouseX, mouseY);
             }
         };
 

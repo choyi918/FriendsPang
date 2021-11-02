@@ -4,36 +4,57 @@ import com.young.game.ui.CanvasGameOp;
 
 import java.awt.*;
 
-public class ButtonNext extends Button{
+public class ButtonNext extends Button {
     private int x;
     private int y;
 
     public ButtonNext() {
-        super("button_next_default.png", "button_next_pointed.png");
+        super("button_next_default.png", "button_next_pointed.png",
+                0 + 9 * CanvasGameOp.DW, 0 + 13 * CanvasGameOp.DW,
+                0 + 20 * CanvasGameOp.DH + 5 * CanvasGameOp.DH, 0 + 20 * CanvasGameOp.DH + 6 * CanvasGameOp.DH);
         x = 0 + 9 * CanvasGameOp.DW;
         y = 0 + 20 * CanvasGameOp.DH + 5 * CanvasGameOp.DH;
     }
 
     public void update() {
         for (int i = 0; i < 10; i++)
-            if (y != 0 + 20 * CanvasGameOp.DH + CanvasGameOp.DH / 2)
-                y--;
+            if (upperBoundaryY != 0 + 20 * CanvasGameOp.DH + CanvasGameOp.DH / 2) {
+                upperBoundaryY--;
+                lowerBoundaryY--;
+            }
     }
 
     @Override
-    public void draw(Graphics g) {
-        CanvasGameOp observer = CanvasGameOp.getInstance();
-
+    public boolean clickedByMouse(int mouseX, int mouseY) {
         int dw = CanvasGameOp.DW;
         int dh = CanvasGameOp.DH;
 
-        g.setColor(new Color(0xFF, 0xFF, 0xFF, 100));
-        g.fillRect(x, y, 4 * dw, dh);
+        if (upperBoundaryY != 0 + 20 * dh + dh / 2)
+            return false;
 
-        g.setColor(Color.BLACK);
-        if (bPointed)
-            g.drawImage(imagePointed, x, y, 4 * dw, dh, observer);
+        if (leftBoundaryX <= mouseX && mouseX <= rightBoundaryX
+                && upperBoundaryY <= mouseY && mouseY <= lowerBoundaryY)
+            return true;
+
+        return false;
+    }
+
+    @Override
+    public void pointedByMouse(int mouseX, int mouseY) {
+        int dw = CanvasGameOp.DW;
+        int dh = CanvasGameOp.DH;
+
+        if (upperBoundaryY != 0 + 20 * dh + dh / 2)
+            return;
+
+        if (leftBoundaryX <= mouseX && mouseX <= rightBoundaryX
+                && upperBoundaryY <= mouseY && mouseY <= lowerBoundaryY)
+            bPointed = true;
         else
-            g.drawImage(imageDefault, x, y, 4 * dw, dh, observer);
+            bPointed = false;
+    }
+
+    public void draw(Graphics g) {
+        super.draw(g, CanvasGameOp.getInstance());
     }
 }

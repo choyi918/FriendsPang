@@ -100,8 +100,7 @@ public class CanvasMain extends Canvas implements Runnable {
             mouseX = e.getX();
             mouseY = e.getY();
 
-            if (0 + 7 * DW <= mouseX && mouseX <= 0 + 15 * DW) {
-                if (0 + 15 * DH <= mouseY && mouseY <= 0 + 16 * DH) {
+            if (buttonGameStart.clickedByMouse(mouseX, mouseY)) {
                     System.out.println("Game Start!!");
                     playSound("click_mouse.wav");
                     CanvasMain.this.setVisible(false);
@@ -110,19 +109,21 @@ public class CanvasMain extends Canvas implements Runnable {
                     gameFrame.add(canvasGameOp);
                     canvasGameOp.setVisible(true);
                     canvasGameOp.validate();
-                }
-                else if (0 + 17 * DH <= mouseY && mouseY <= 0 + 18 * DH) {
+            }
+
+            if (buttonRankingShowing.clickedByMouse(mouseX, mouseY)) {
                     System.out.println("Ranking!!");
                     playSound("click_mouse.wav");
                     CanvasMain.this.setVisible(false);
                     CanvasRanking canvasRanking = CanvasRanking.getInstance();
                     GameFrame.getInstance().add(canvasRanking);
-                }
-                else if (0 + 19 * DH <= mouseY && mouseY <= 0 + 20 * DH) {
+            }
+
+            if (buttonExit.clickedByMouse(mouseX, mouseY)) {
                     System.out.println("go home!!");
                     playSound("click_mouse.wav");
-                }
             }
+
         }
 
         @Override
@@ -130,18 +131,19 @@ public class CanvasMain extends Canvas implements Runnable {
             mouseX = e.getX();
             mouseY = e.getY();
 
-            buttonGameStart.outpointButton();
-            buttonRankingShowing.outpointButton();
-            buttonExit.outpointButton();
 
-            if (0 + 7 * DW <= mouseX && mouseX <= 0 + 15 * DW) {
-                if (0 + 15 * DH <= mouseY && mouseY <= 0 + 16 * DH)
-                    buttonGameStart.pointButton();
-                else if (0 + 17 * DH <= mouseY && mouseY <= 0 + 18 * DH)
-                    buttonRankingShowing.pointButton();
-                else if (0 + 19 * DH <= mouseY && mouseY <= 0 + 20 * DH)
-                    buttonExit.pointButton();
-            }
+//            if (0 + 7 * DW <= mouseX && mouseX <= 0 + 15 * DW) {
+//                if (0 + 15 * DH <= mouseY && mouseY <= 0 + 16 * DH)
+//                    buttonGameStart.pointButton();
+//                else if (0 + 17 * DH <= mouseY && mouseY <= 0 + 18 * DH)
+//                    buttonRankingShowing.pointButton();
+//                else if (0 + 19 * DH <= mouseY && mouseY <= 0 + 20 * DH)
+//                    buttonExit.pointButton();
+//            }
+
+            buttonGameStart.pointedByMouse(mouseX, mouseY);
+            buttonRankingShowing.pointedByMouse(mouseX, mouseY);
+            buttonExit.pointedByMouse(mouseX, mouseY);
         }
     }
 

@@ -7,6 +7,7 @@ import com.young.game.objects.button.ButtonNext;
 import com.young.game.objects.button.ButtonPause;
 import com.young.game.objects.Friends.Friend;
 import com.young.game.objects.GameBoard;
+import com.young.game.objects.button.ButtonRestart;
 import com.young.game.objects.pointViewer.LabelPoint;
 import com.young.game.objects.timer.LabelTimer;
 
@@ -25,6 +26,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
     private Image imageBackGround;
     private ButtonBackMain buttonBackMain;
     private ButtonPause buttonPause;
+    private ButtonRestart buttonRestart;
     private ButtonNext buttonNext;
     private LabelPoint labelPoint;
     private LabelTimer labelTimer;
@@ -52,7 +54,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
         setSize(WIDTH, HEIGHT);
         setBackground(new Color(0xFD, 0xDC, 0x2F));
 
-        buttonBackMain = new ButtonBackMain(2 * DW, 2 * DH, this);
+        buttonBackMain = new ButtonBackMain(2 * DW, 0 + 2 * DW + 4 * DW, 2 * DH, 2 * DH + DH, this);
         buttonPause = new ButtonPause();
         labelTimer = new LabelTimer();
         labelPoint = new LabelPoint();
@@ -92,10 +94,15 @@ public class CanvasGameOp extends Canvas implements Runnable {
 
         buffG.drawImage(imageBackGround, 0, 0, getWidth(), getHeight(), this);
         buttonBackMain.draw(buffG);
-        buttonPause.draw(buffG);
         labelPoint.draw(buffG);
         labelTimer.draw(buffG);
         gameBoard.draw(buffG);
+
+        if (buttonPause != null)
+            buttonPause.draw(buffG);
+
+        if (buttonRestart != null)
+            buttonRestart.draw(buffG);
 
         if (buttonNext != null)
             buttonNext.draw(buffG);
@@ -175,64 +182,56 @@ public class CanvasGameOp extends Canvas implements Runnable {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            Point p = e.getPoint();
-            int mouseX = (int)p.getX();
-            int mouseY = (int)p.getY();
+            int mouseX = e.getX();
+            int mouseY = e.getY();
 
-            if (0 + 2 * DH <= mouseY && mouseY <= 0 + 3 * DH) {
-                if (0 + 2 * DW <= mouseX && mouseX <= 0 + 6 * DW) {
+            if (buttonBackMain.clickedByMouse(mouseX, mouseY)) {
                     playSound("click_mouse.wav");
                     CanvasMain.getInstance().setVisible(true);
                     CanvasGameOp.this.setVisible(false);
                     /* Game을 초기화 하는 코드*/
                     bRunning = false;
                     reset();
-                }
-                else if (0 + 16 * DH <= mouseX && mouseX <= 0 + 20 * DH) {
-                    System.out.println("Pause!!");
-                    playSound("click_mouse.wav");
-                    /* Game을 일시정지 하는 코드 : 마우스 안 먹게하기, 타이머 일시정지, 서브스레드에 업데이트관련 동작들 동작 ㄴ*/
-                    if (!bPause) {
-                        labelTimer.stop();
-                        bPause = true;
-                    } else {
-                        labelTimer.start();
-                        bPause = false;
-                    }
-                }
             }
 
-            if (buttonNext != null)
-                if (0 + 9 * DW <= mouseX && mouseX <= 0 + 9 * DW + 4 * DW
-                        && 0 + 20 * DH + DH / 2 <= mouseY && mouseY <= 0 + 20 * DH + DH / 2 + DH) {
-                    playSound("click_mouse.wav");
-                    setVisible(false);
-                    GameFrame.getInstance().add(CanvasRankingInput.getInstance());
-                }
+            if (buttonPause != null && buttonPause.clickedByMouse(mouseX, mouseY)) {
+                System.out.println("Pause!!");
+                playSound("click_mouse.wav");
+                /* Game을 일시정지 하는 코드 : 마우스 안 먹게하기, 타이머 일시정지, 서브스레드에 업데이트관련 동작들 동작 ㄴ*/
+                labelTimer.stop();
+                bPause = true;
+                buttonPause = null;
+                buttonRestart = new ButtonRestart();
+            } else if (buttonRestart != null && buttonRestart.clickedByMouse(mouseX, mouseY)) {
+                System.out.println("ReStart!!");
+                labelTimer.start();
+                bPause = false;
+                buttonRestart = null;
+                buttonPause = new ButtonPause();
+            }
+
+            if (buttonNext != null && buttonNext.clickedByMouse(mouseX, mouseY)) {
+                playSound("click_mouse.wav");
+                setVisible(false);
+                GameFrame.getInstance().add(CanvasRankingInput.getInstance());
+            }
         }
 
         @Override
         public void mouseMoved(MouseEvent e) {
-            Point p = e.getPoint();
-            int mouseX = (int)p.getX();
-            int mouseY = (int)p.getY();
+            int mouseX = e.getX();
+            int mouseY = e.getY();
 
-            buttonBackMain.outpointButton();
-            buttonPause.outpointButton();
+            buttonBackMain.pointedByMouse(mouseX, mouseY);
 
-            if (0 + 2 * DH <= mouseY && mouseY <= 0 + 3 * DH) {
-                if (0 + 2 * DW <= mouseX && mouseX <= 0 + 6 * DW)
-                    buttonBackMain.pointButton();
-                else if (0 + 16 * DH <= mouseX && mouseX <= 0 + 20 * DH)
-                    buttonPause.pointButton();
-            }
+            if (buttonPause != null)
+                buttonPause.pointedByMouse(mouseX, mouseY);
 
-            if (buttonNext != null) {
-                buttonNext.outpointButton();
-                if (0 + 9 * DW <= mouseX && mouseX <= 0 + 9 * DW + 4 * DW
-                        && 0 + 20 * DH + DH / 2 <= mouseY && mouseY <= 0 + 20 * DH + DH / 2 + DH)
-                    buttonNext.pointButton();
-            }
+            if (buttonRestart != null)
+                buttonRestart.pointedByMouse(mouseX, mouseY);
+
+            if (buttonNext != null)
+                buttonNext.pointedByMouse(mouseX, mouseY);
         }
 
         @Override
@@ -242,9 +241,8 @@ public class CanvasGameOp extends Canvas implements Runnable {
             if (!bPossibleMouseEvent)
                 return;
 
-            Point p = e.getPoint();
-            pressedX = (int)p.getX();
-            pressedY = (int)p.getY();
+            pressedX = e.getX();
+            pressedY = e.getY();
 
             if (!(0 + 4 * DW <= pressedX && pressedX <= 0 + 18 * DW
                     && 0 + 4 * DH <= pressedY && pressedY <= 0 + 18 * DH)) {

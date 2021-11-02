@@ -48,33 +48,48 @@ public class CanvasRankingInput extends Canvas implements Runnable {
         buttons = new ButtonChar[ALPHABET_SIZE];
         labelPoint = new LabelPoint(GameBoard.getInstance().getPoint(), 11 * DW, 2 * DH, 200);
 
-        int i = 0;
-        buttons[i++] = new ButtonA();
-        buttons[i++] = new ButtonB();
-        buttons[i++] = new ButtonC();
-        buttons[i++] = new ButtonD();
-        buttons[i++] = new ButtonE();
-        buttons[i++] = new ButtonF();
-        buttons[i++] = new ButtonG();
-        buttons[i++] = new ButtonH();
-        buttons[i++] = new ButtonI();
-        buttons[i++] = new ButtonJ();
-        buttons[i++] = new ButtonK();
-        buttons[i++] = new ButtonL();
-        buttons[i++] = new ButtonM();
-        buttons[i++] = new ButtonN();
-        buttons[i++] = new ButtonO();
-        buttons[i++] = new ButtonP();
-        buttons[i++] = new ButtonQ();
-        buttons[i++] = new ButtonR();
-        buttons[i++] = new ButtonS();
-        buttons[i++] = new ButtonT();
-        buttons[i++] = new ButtonU();
-        buttons[i++] = new ButtonV();
-        buttons[i++] = new ButtonW();
-        buttons[i++] = new ButtonX();
-        buttons[i++] = new ButtonY();
-        buttons[i] = new ButtonZ();
+//        int i = 0;
+//        buttons[i++] = new ButtonA();
+//        buttons[i++] = new ButtonB();
+//        buttons[i++] = new ButtonC();
+//        buttons[i++] = new ButtonD();
+//        buttons[i++] = new ButtonE();
+//        buttons[i++] = new ButtonF();
+//        buttons[i++] = new ButtonG();
+//        buttons[i++] = new ButtonH();
+//        buttons[i++] = new ButtonI();
+//        buttons[i++] = new ButtonJ();
+//        buttons[i++] = new ButtonK();
+//        buttons[i++] = new ButtonL();
+//        buttons[i++] = new ButtonM();
+//        buttons[i++] = new ButtonN();
+//        buttons[i++] = new ButtonO();
+//        buttons[i++] = new ButtonP();
+//        buttons[i++] = new ButtonQ();
+//        buttons[i++] = new ButtonR();
+//        buttons[i++] = new ButtonS();
+//        buttons[i++] = new ButtonT();
+//        buttons[i++] = new ButtonU();
+//        buttons[i++] = new ButtonV();
+//        buttons[i++] = new ButtonW();
+//        buttons[i++] = new ButtonX();
+//        buttons[i++] = new ButtonY();
+//        buttons[i] = new ButtonZ();
+
+        int defaultX = 0 + 3 / 2 * DW;
+        int defaultY = 0 + 8 * DH;
+        int dw2 = DW / 4;
+        int dh2 = DH / 4;
+
+        for (char ch = 'A'; ch < 'Z' + 1; ch++)
+            buttons[ch - 'A'] = new ButtonChar(ch,
+                    String.format("button_%c_default.png", ch),
+                    String.format("button_%c_pointed.png", ch),
+                    defaultX + ((ch - 'A') % 7) * 3 * DW,
+                    defaultX + ((ch - 'A') % 7) * 3 * DW + 2 * DW - dw2,
+                    defaultY + ((ch - 'A') / 7) * 3 * DH,
+                    defaultY + ((ch - 'A') / 7) * 3 * DH + 2 * DH - dh2);
+
         buttonArrow = new ButtonArrow();
         buttonOk = new ButtonOk();
 
@@ -160,22 +175,19 @@ public class CanvasRankingInput extends Canvas implements Runnable {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            int eX = e.getX();
-            int eY = e.getY();
+            int mouseX = e.getX();
+            int mouseY = e.getY();
 
-            for (char ch = 'A'; ch < 'Z'; ch++)
-                if (getCharX(ch) <= eX && eX <= getCharX(ch) + 2 * DW - dw2
-                        && getCharY(ch) <= eY && eY <= getCharY(ch) + 2 * DH - dh2) {
-                    if (buttonChars.size() != 8)
-                        buttonChars.add(buttons[ch - 'A']);
-                }
+            for (char ch = 'A'; ch < 'Z' + 1; ch++) {
+                if (buttonChars.size() != 8 && buttons[ch - 'A'].clickedByMouse(mouseX, mouseY))
+                    buttonChars.add(buttons[ch - 'A']);
+            }
 
-            if (getCharX('Z') + 3 * DW <= eX && eX <= getCharX('Z') + 3 * DW + 2 * DW - dw2
-                    && getCharY('Z') <= eY && eY <= getCharY('Z') + 2 * DH - dh2)
+            if (buttonArrow.clickedByMouse(mouseX, mouseY))
                 buttonChars.removeLast();
 
-            if (getCharX('Z') + 3 * DW * 2 <= eX && eX <= getCharX('Z') + 3 * DW * 2+ 2 * DW - dw2
-                    && getCharY('Z') <= eY && eY <= getCharY('Z') + 2 * DH - dh2){
+
+            if (buttonOk.clickedByMouse(mouseX, mouseY)) {
                 try {
                     CanvasRankingInput.this.register();
                 } catch (IOException exception) {
@@ -192,30 +204,14 @@ public class CanvasRankingInput extends Canvas implements Runnable {
 
         @Override
         public void mouseMoved(MouseEvent e) {
-            int eX = e.getX();
-            int eY = e.getY();
+            int mouseX = e.getX();
+            int mouseY = e.getY();
 
             for (char ch = 'A'; ch < 'Z' + 1; ch++)
-                buttons[ch - 'A'].outpointButton();
+                buttons[ch - 'A'].pointedByMouse(mouseX, mouseY);
 
-            buttonArrow.outpointButton();
-            buttonOk.outpointButton();
-
-            for (char ch = 'A'; ch < 'Z' + 1; ch++)
-                if (getCharX(ch) <= eX && eX <= getCharX(ch) + 2 * DW - dw2
-                        && getCharY(ch) <= eY && eY <= getCharY(ch) + 2 * DH - dh2)
-                    buttons[ch - 'A'].pointButton();
-
-
-            if (getCharX('Z') + 3 * DW <= eX && eX <= getCharX('Z') + 3 * DW + 2 * DW - dw2
-                    && getCharY('Z') <= eY && eY <= getCharY('Z') + 2 * DH - dh2){
-                buttonArrow.pointButton();
-            }
-
-            if (getCharX('Z') + 3 * DW * 2 <= eX && eX <= getCharX('Z') + 3 * DW * 2+ 2 * DW - dw2
-                    && getCharY('Z') <= eY && eY <= getCharY('Z') + 2 * DH - dh2){
-                buttonOk.pointButton();
-            }
+            buttonArrow.pointedByMouse(mouseX, mouseY);
+            buttonOk.pointedByMouse(mouseX, mouseY);
         }
 
         private int getCharX(char ch) {
