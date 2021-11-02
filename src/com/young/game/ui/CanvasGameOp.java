@@ -186,12 +186,12 @@ public class CanvasGameOp extends Canvas implements Runnable {
             int mouseY = e.getY();
 
             if (buttonBackMain.clickedByMouse(mouseX, mouseY)) {
-                    playSound("click_mouse.wav");
-                    CanvasMain.getInstance().setVisible(true);
-                    CanvasGameOp.this.setVisible(false);
-                    /* Game을 초기화 하는 코드*/
-                    bRunning = false;
-                    reset();
+                playSound("click_mouse.wav");
+                CanvasMain.getInstance().setVisible(true);
+                CanvasGameOp.this.setVisible(false);
+                /* Game을 초기화 하는 코드*/
+                bRunning = false;
+                reset();
             }
 
             if (buttonPause != null && buttonPause.clickedByMouse(mouseX, mouseY)) {
@@ -204,6 +204,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
                 buttonRestart = new ButtonRestart();
             } else if (buttonRestart != null && buttonRestart.clickedByMouse(mouseX, mouseY)) {
                 System.out.println("ReStart!!");
+                playSound("click_mouse.wav");
                 labelTimer.start();
                 bPause = false;
                 buttonRestart = null;
@@ -263,9 +264,8 @@ public class CanvasGameOp extends Canvas implements Runnable {
              * 두 스레드간 데이터 간섭이 있는지 생각해봐야함.
              * */
             bPossibleMouseEvent = false;
-            Point p = e.getPoint();
-            releasedX  = (int)p.getX();
-            releasedY = (int)p.getY();
+            releasedX  = e.getX();
+            releasedY = e.getY();
 
             /* 조건에 맞지 않는 경우 그냥 return */
             if (!(0 + 4 * DW <= releasedX && releasedX <= 0 + 18 * DW

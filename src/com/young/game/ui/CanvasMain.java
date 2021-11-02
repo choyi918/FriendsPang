@@ -131,16 +131,6 @@ public class CanvasMain extends Canvas implements Runnable {
             mouseX = e.getX();
             mouseY = e.getY();
 
-
-//            if (0 + 7 * DW <= mouseX && mouseX <= 0 + 15 * DW) {
-//                if (0 + 15 * DH <= mouseY && mouseY <= 0 + 16 * DH)
-//                    buttonGameStart.pointButton();
-//                else if (0 + 17 * DH <= mouseY && mouseY <= 0 + 18 * DH)
-//                    buttonRankingShowing.pointButton();
-//                else if (0 + 19 * DH <= mouseY && mouseY <= 0 + 20 * DH)
-//                    buttonExit.pointButton();
-//            }
-
             buttonGameStart.pointedByMouse(mouseX, mouseY);
             buttonRankingShowing.pointedByMouse(mouseX, mouseY);
             buttonExit.pointedByMouse(mouseX, mouseY);

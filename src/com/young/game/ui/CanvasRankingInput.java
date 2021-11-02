@@ -48,34 +48,6 @@ public class CanvasRankingInput extends Canvas implements Runnable {
         buttons = new ButtonChar[ALPHABET_SIZE];
         labelPoint = new LabelPoint(GameBoard.getInstance().getPoint(), 11 * DW, 2 * DH, 200);
 
-//        int i = 0;
-//        buttons[i++] = new ButtonA();
-//        buttons[i++] = new ButtonB();
-//        buttons[i++] = new ButtonC();
-//        buttons[i++] = new ButtonD();
-//        buttons[i++] = new ButtonE();
-//        buttons[i++] = new ButtonF();
-//        buttons[i++] = new ButtonG();
-//        buttons[i++] = new ButtonH();
-//        buttons[i++] = new ButtonI();
-//        buttons[i++] = new ButtonJ();
-//        buttons[i++] = new ButtonK();
-//        buttons[i++] = new ButtonL();
-//        buttons[i++] = new ButtonM();
-//        buttons[i++] = new ButtonN();
-//        buttons[i++] = new ButtonO();
-//        buttons[i++] = new ButtonP();
-//        buttons[i++] = new ButtonQ();
-//        buttons[i++] = new ButtonR();
-//        buttons[i++] = new ButtonS();
-//        buttons[i++] = new ButtonT();
-//        buttons[i++] = new ButtonU();
-//        buttons[i++] = new ButtonV();
-//        buttons[i++] = new ButtonW();
-//        buttons[i++] = new ButtonX();
-//        buttons[i++] = new ButtonY();
-//        buttons[i] = new ButtonZ();
-
         int defaultX = 0 + 3 / 2 * DW;
         int defaultY = 0 + 8 * DH;
         int dw2 = DW / 4;
@@ -168,10 +140,6 @@ public class CanvasRankingInput extends Canvas implements Runnable {
     }
 
     private class MouseAdapterForCanvasRankingInput extends MouseAdapter {
-        int defaultX = 0 + 3 / 2 * DW;
-        int defaultY = 0 + 8 * DH;
-        int dw2 = DW / 4;
-        int dh2 = DH / 4;
 
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -183,9 +151,8 @@ public class CanvasRankingInput extends Canvas implements Runnable {
                     buttonChars.add(buttons[ch - 'A']);
             }
 
-            if (buttonArrow.clickedByMouse(mouseX, mouseY))
+            if (buttonArrow.clickedByMouse(mouseX, mouseY) && buttonChars.size() > 0)
                 buttonChars.removeLast();
-
 
             if (buttonOk.clickedByMouse(mouseX, mouseY)) {
                 try {
@@ -212,14 +179,6 @@ public class CanvasRankingInput extends Canvas implements Runnable {
 
             buttonArrow.pointedByMouse(mouseX, mouseY);
             buttonOk.pointedByMouse(mouseX, mouseY);
-        }
-
-        private int getCharX(char ch) {
-            return defaultX + ((ch - 'A') % 7) * 3 * DW;
-        }
-
-        private int getCharY(char ch) {
-            return defaultY + ((ch - 'A') / 7) * 3 * DH;
         }
     };
 }
