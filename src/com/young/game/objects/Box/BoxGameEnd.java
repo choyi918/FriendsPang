@@ -24,7 +24,7 @@ public class BoxGameEnd {
         imageY = 0 - 7 * 2 * CanvasGameOp.DH;
     }
 
-    public boolean isCompleteMoving() {
+    public boolean isCompleteToMove() {
         return bCompleteMoving;
     }
 

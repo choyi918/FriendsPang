@@ -473,7 +473,7 @@ public class GameBoard {
         f2.setBoardY(y2);
     }
 
-    /* 3개 이상의 연속 배치가 없고, 답이 있는 보드를 검증하여 판을 새로 갱신할 때 씀 - 1. 처음 게임을 시작할때 2. 답이 없는경우 판을 다시 갱신할 때 */
+    /* 3개 이상의 연속 배치가 없고, 답이 있는 보드인지 검증하여 판을 새로 갱신할 때 씀 - 1. 처음 게임을 시작할때 2. 답이 없는경우 판을 다시 갱신할 때 */
     public void makeQueueOfVerifiedInitializedBoard() {
         Friend[][] verifiedBoard = getVerifiedInitializedBoard();
 
@@ -489,7 +489,7 @@ public class GameBoard {
                 f.setCanvasY(DEFAULT_Y);
                 f.setValidCanvasX(DEFAULT_X + x * 2 * dw);
                 f.setValidCanvasY(DEFAULT_Y);
-                /* bottom - left 부터 top - right까지 queue를 만듦 */
+                /* bottom - left 부터 top - right 까지 queue 를 만듦 */
                 queueOfVerifiedInitializedBoard.enqueue(f);
             }
         }

@@ -113,7 +113,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
 
     @Override
     public void run(){
-        while(bRunning){
+        while (bRunning) {
 
             if (!labelTimer.isTimeout()) {
 
@@ -138,7 +138,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
             else {
                 boxGameEnd.update();
 
-                if (buttonNext == null && boxGameEnd.isCompleteMoving())
+                if (buttonNext == null && boxGameEnd.isCompleteToMove())
                     buttonNext = new ButtonNext();
 
                 if (buttonNext != null)
