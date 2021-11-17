@@ -1,10 +1,8 @@
 package com.young.game.objects.button;
 
 import com.young.game.ui.CanvasGameOp;
-import com.young.game.ui.CanvasRankingInput;
 
 import java.awt.*;
-
 
 public class ButtonChar extends Button {
     private char ch;

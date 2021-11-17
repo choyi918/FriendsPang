@@ -55,7 +55,12 @@ public class CanvasRanking extends Canvas implements Runnable{
             public void mouseClicked(MouseEvent e) {
                 int mouseX= e.getX();
                 int mouseY = e.getY();
-                buttonBackMain.clickedByMouse(mouseX, mouseY);
+
+                if (buttonBackMain.clickedByMouse(mouseX, mouseY)) {
+                    setVisible(false);
+                    CanvasMain.getInstance().setVisible(true);
+                    instance = null;
+                }
             }
 
             @Override

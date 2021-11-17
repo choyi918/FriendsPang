@@ -16,5 +16,4 @@ public class ButtonBackMain extends Button {
     public void draw(Graphics g) {
         super.draw(g, observer);
     }
-
 }

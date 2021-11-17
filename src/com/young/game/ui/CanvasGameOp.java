@@ -82,11 +82,6 @@ public class CanvasGameOp extends Canvas implements Runnable {
         System.out.println("Game Reset");
     }
 
-    /* Getters */
-    public boolean isPause() {
-        return bPause;
-    }
-
     @Override
     public void paint(Graphics g) {
         Image buff = createImage(getWidth(), getHeight());
@@ -121,7 +116,6 @@ public class CanvasGameOp extends Canvas implements Runnable {
     @Override
     public void run(){
         while (bRunning) {
-
             if (!labelTimer.isTimeout()) {
 
                 if (gameBoard.getLinkedListOfBoard().size() == 0)
@@ -133,11 +127,11 @@ public class CanvasGameOp extends Canvas implements Runnable {
                     f.update();
 
                 /* 49개 다 꽉 차고, Friends들이 다 제자리에 온전히 위치한 상태에서만 실행되도록.*/
-                if (isAllCompleteToMove() && gameBoard.isFull()) {
+                if (gameBoard.isFull() && isAllCompleteToMove()) {
                     gameBoard.update();
                     bPossibleMouseEvent = true;
                 }
-                if (isAllCompleteToMove() && gameBoard.isFull() && !gameBoard.checkValidationBoardAndClearBoard())
+                if (gameBoard.isFull() && isAllCompleteToMove() && !gameBoard.checkValidationBoardAndClearBoard())
                     continue;
 
                 labelTimer.update();

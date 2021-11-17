@@ -46,8 +46,10 @@ public class BoxGameEnd {
 
         g.setColor(new Color(0xFF, 0xFF, 0xFF, 150));
         g.fillRect(x, y, 7 * 2 * dw, 7 * 2 * dh);
+
         g.setColor(Color.BLACK);
         g.drawRect(x, y, 7 * 2 * dw, 7 * 2 * dh);
+
         g.drawImage(image, 0 + 4 * dw, imageY, 7 * 2 * dw, 7 * 2 * dw, observer);
     }
 
