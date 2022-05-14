@@ -485,10 +485,10 @@ public class GameBoard {
                 /* 보드의 탑라인으로 boardY, canvasY, validCanvasY을 초기화 -> 죄다 */
                 f.setBoardY(0);
                 f.setBoardX(x);
-                f.setCanvasX(DEFAULT_X + x * 2 * dw);
-                f.setCanvasY(DEFAULT_Y);
-                f.setValidCanvasX(DEFAULT_X + x * 2 * dw);
-                f.setValidCanvasY(DEFAULT_Y);
+                f.setPresentCanvasX(DEFAULT_X + x * 2 * dw);
+                f.setPresentCanvasY(DEFAULT_Y);
+                f.setTargetCanvasX(DEFAULT_X + x * 2 * dw);
+                f.setTargetCanvasY(DEFAULT_Y);
                 /* bottom - left 부터 top - right 까지 queue 를 만듦 */
                 queueOfVerifiedInitializedBoard.enqueue(f);
             }

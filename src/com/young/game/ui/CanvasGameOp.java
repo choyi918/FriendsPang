@@ -23,7 +23,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
     private boolean bPause;
     private boolean bRunning;
     private boolean bPossibleMouseEvent;
-    private Image imageBackGround;
+    private Image imageBackground;
     private ButtonBackMain buttonBackMain;
     private ButtonPause buttonPause;
     private ButtonRestart buttonRestart;
@@ -34,9 +34,11 @@ public class CanvasGameOp extends Canvas implements Runnable {
     private GameBoard gameBoard;
     private MouseAdapterForCanvasGameOp mouseAdapterForCanvasGameOp;
 
-    /*Canvas 22등분 한 후 단위 길이  */
+    /* Canvas size */
     private static final int WIDTH;
     private static final int HEIGHT;
+
+    /*Canvas 22등분 한 후 단위 길이  */
     public static final int DW;
     public static final int DH;
 
@@ -49,7 +51,6 @@ public class CanvasGameOp extends Canvas implements Runnable {
         DH = HEIGHT / 22;
     }
 
-
     private CanvasGameOp() {
         setSize(WIDTH, HEIGHT);
         setBackground(new Color(0xFD, 0xDC, 0x2F));
@@ -60,7 +61,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
         labelPoint = new LabelPoint();
         boxGameEnd = new BoxGameEnd();
         gameBoard = GameBoard.getInstance();
-        imageBackGround = Toolkit.getDefaultToolkit().getImage("res/images/autumn_story.png");
+        imageBackground = Toolkit.getDefaultToolkit().getImage("res/images/autumn_story.png");
 
         mouseAdapterForCanvasGameOp = new MouseAdapterForCanvasGameOp();
         addMouseListener(mouseAdapterForCanvasGameOp);
@@ -87,7 +88,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
         Image buff = createImage(getWidth(), getHeight());
         Graphics buffG = buff.getGraphics();
 
-        buffG.drawImage(imageBackGround, 0, 0, getWidth(), getHeight(), this);
+        buffG.drawImage(imageBackground, 0, 0, getWidth(), getHeight(), this);
         buttonBackMain.draw(buffG);
         labelPoint.draw(buffG);
         labelTimer.draw(buffG);
