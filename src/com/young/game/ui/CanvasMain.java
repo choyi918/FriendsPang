@@ -40,9 +40,12 @@ public class CanvasMain extends Canvas implements Runnable {
         setBackground(new Color(0xFD, 0xDC, 0x2F));
 
         imageMain = new ImageMain();
-        buttonGameStart = new ButtonGameStart();
-        buttonRankingShowing = new ButtonRankingShowing();
-        buttonExit = new ButtonExit();
+        buttonGameStart = new ButtonGameStart(0 + 7 * CanvasMain.DW, 0 + 15 * CanvasMain.DW,
+                0 + 15 * CanvasMain.DH, 0 + 16 * CanvasMain.DH, this);
+        buttonRankingShowing = new ButtonRankingShowing(0 + 7 * CanvasMain.DW, 0 + 15 * CanvasMain.DW,
+                0 + 17 * CanvasMain.DH, 0 + 18 * CanvasMain.DH, this);
+        buttonExit = new ButtonExit(0 + 7 * CanvasMain.DW, 0 + 15 * CanvasMain.DW,
+                0 + 19 * CanvasMain.DH, 0 + 20 * CanvasMain.DH, this);
 
         mouseAdapterForCanvasMain = new MouseAdapterForCanvasMain();
         addMouseListener(mouseAdapterForCanvasMain);

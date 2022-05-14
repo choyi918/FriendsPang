@@ -27,7 +27,7 @@ public class BoxRankingNameViewer {
             buttonCharsOfName.addLast(new ButtonChar(ch,
                     String.format("button_%c_default.png", ch),
                     String.format("button_%c_pointed.png", ch),
-                    0, 0, 0, 0));
+                    0, 0, 0, 0, null)); // null을 넣어도 괜찮나? 이 클래스(네임뷰어)는 일단 draw에 다시 인스턴스를 불러와서 그리고있음
         }
     }
 

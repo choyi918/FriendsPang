@@ -55,8 +55,10 @@ public class CanvasGameOp extends Canvas implements Runnable {
         setSize(WIDTH, HEIGHT);
         setBackground(new Color(0xFD, 0xDC, 0x2F));
 
-        buttonBackMain = new ButtonBackMain(2 * DW, 0 + 2 * DW + 4 * DW, 2 * DH, 2 * DH + DH, this);
-        buttonPause = new ButtonPause();
+        buttonBackMain = new ButtonBackMain(2 * DW, 0 + 2 * DW + 4 * DW,
+                2 * DH, 2 * DH + DH, this);
+        buttonPause = new ButtonPause(0 + 16 * DW, 0 + 20 * DW,
+                0 + 2 * DH, 0 + 3 * DH, this);
         labelTimer = new LabelTimer();
         labelPoint = new LabelPoint();
         boxGameEnd = new BoxGameEnd();
@@ -142,7 +144,8 @@ public class CanvasGameOp extends Canvas implements Runnable {
                 boxGameEnd.update();
 
                 if (buttonNext == null && boxGameEnd.isCompleteToMove())
-                    buttonNext = new ButtonNext();
+                    buttonNext = new ButtonNext(0 + 9 * CanvasGameOp.DW, 0 + 13 * CanvasGameOp.DW,
+                            0 + 20 * CanvasGameOp.DH + 5 * CanvasGameOp.DH, 0 + 20 * CanvasGameOp.DH + 6 * CanvasGameOp.DH, this);
 
                 if (buttonNext != null)
                     buttonNext.update();
@@ -197,14 +200,16 @@ public class CanvasGameOp extends Canvas implements Runnable {
                 labelTimer.stop();
                 bPause = true;
                 buttonPause = null;
-                buttonRestart = new ButtonRestart();
+                buttonRestart = new ButtonRestart(0 + 16 * DW, 0 + 20 * DW,
+                        0 + 2 * DH, 0 + 3 * DH, CanvasGameOp.getInstance());
             } else if (buttonRestart != null && buttonRestart.clickedByMouse(mouseX, mouseY)) {
                 System.out.println("ReStart!!");
                 playSound("click_mouse.wav");
                 labelTimer.start();
                 bPause = false;
                 buttonRestart = null;
-                buttonPause = new ButtonPause();
+                buttonPause = new ButtonPause(0 + 16 * DW, 0 + 20 * DW,
+                        0 + 2 * DH, 0 + 3 * DH, CanvasGameOp.getInstance());
             }
 
             if (buttonNext != null && buttonNext.clickedByMouse(mouseX, mouseY)) {

@@ -13,15 +13,18 @@ public abstract class Button {
     protected int upperBoundaryY;
     protected int lowerBoundaryY;
 
+    protected Canvas observer;
+
 
     public Button(String imageDefaultFileName, String imagePointedFileName,
-                  int leftBoundaryX, int rightBoundaryX, int upperBoundaryY, int lowerBoundaryY){
+                  int leftBoundaryX, int rightBoundaryX, int upperBoundaryY, int lowerBoundaryY, Canvas observer){
         imageDefault = Toolkit.getDefaultToolkit().getImage(String.format("res/images/%s", imageDefaultFileName));
         imagePointed = Toolkit.getDefaultToolkit().getImage(String.format("res/images/%s", imagePointedFileName));
         this.leftBoundaryX = leftBoundaryX;
         this.rightBoundaryX = rightBoundaryX;
         this.upperBoundaryY = upperBoundaryY;
         this.lowerBoundaryY = lowerBoundaryY;
+        this.observer = observer;
     }
 
     public Image getImage() {

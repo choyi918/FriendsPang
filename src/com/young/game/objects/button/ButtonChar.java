@@ -8,8 +8,8 @@ public class ButtonChar extends Button {
     private char ch;
 
     public ButtonChar(char ch, String defaultFileName, String pointedFileName,
-                      int leftBoundaryX, int rightBoundaryX, int upperBoundaryY, int lowerBoundaryY) {
-        super(defaultFileName, pointedFileName, leftBoundaryX, rightBoundaryX, upperBoundaryY, lowerBoundaryY);
+                      int leftBoundaryX, int rightBoundaryX, int upperBoundaryY, int lowerBoundaryY, Canvas observer) {
+        super(defaultFileName, pointedFileName, leftBoundaryX, rightBoundaryX, upperBoundaryY, lowerBoundaryY, observer);
         this.ch = ch;
     }
 
@@ -18,6 +18,6 @@ public class ButtonChar extends Button {
     }
 
     public void draw(Graphics g) {
-        super.draw(g, CanvasGameOp.getInstance());
+        super.draw(g, observer);
     }
 }

@@ -60,10 +60,18 @@ public class CanvasRankingInput extends Canvas implements Runnable {
                     defaultX + ((ch - 'A') % 7) * 3 * DW,
                     defaultX + ((ch - 'A') % 7) * 3 * DW + 2 * DW - dw2,
                     defaultY + ((ch - 'A') / 7) * 3 * DH,
-                    defaultY + ((ch - 'A') / 7) * 3 * DH + 2 * DH - dh2);
+                    defaultY + ((ch - 'A') / 7) * 3 * DH + 2 * DH - dh2,
+                    this);
 
-        buttonArrow = new ButtonArrow();
-        buttonOk = new ButtonOk();
+        buttonArrow = new ButtonArrow(0 + 3 / 2 * DW + (('Z' - 'A') % 7 + 1) * 3 * DW,
+                0 + 3 / 2 * DW + (('Z' - 'A') % 7 + 1) * 3 * DW + 2 * DW - DW / 4,
+                0 + 8 * DH + (('Z' - 'A') / 7) * 3 * DH,
+                0 + 8 * DH + (('Z' - 'A') / 7) * 3 * DH + 2 * DH - DH / 4, this);
+
+        buttonOk = new ButtonOk(0 + 3 / 2 * DW + (('Z' - 'A') % 7 + 2) * 3 * DW,
+                0 + 3 / 2 * DW + (('Z' - 'A') % 7 + 2) * 3 * DW + 2 * DW - DW / 4,
+                0 + 8 * DH + (('Z' - 'A') / 7) * 3 * DH,
+                0 + 8 * DH + (('Z' - 'A') / 7) * 3 * DH + 2 * DH - DH / 4,this);
 
         imageBackGround = Toolkit.getDefaultToolkit().getImage("res/images/autumn_story.png");
         mouseAdapterForCanvasRankingInput = new MouseAdapterForCanvasRankingInput();

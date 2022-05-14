@@ -5,13 +5,12 @@ import com.young.game.ui.CanvasMain;
 import java.awt.*;
 
 public class ButtonExit extends Button{
-    public ButtonExit() {
+    public ButtonExit(int leftBoundaryX, int rightBoundaryX, int upperBoundaryY, int lowerBoundaryY, Canvas observer) {
         super("button_exit.png","button_exit_pointed.png",
-                0 + 7 * CanvasMain.DW, 0 + 15 * CanvasMain.DW,
-                0 + 19 * CanvasMain.DH, 0 + 20 * CanvasMain.DH);
+                leftBoundaryX, rightBoundaryX, upperBoundaryY, lowerBoundaryY, observer);
     }
 
     public void draw(Graphics g) {
-        super.draw(g, CanvasMain.getInstance());
+        super.draw(g, observer);
     }
 }

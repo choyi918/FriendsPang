@@ -6,13 +6,12 @@ import java.awt.*;
 
 public class ButtonPause extends Button{
 
-    public ButtonPause() {
+    public ButtonPause(int leftBoundaryX, int rightBoundaryX, int upperBoundaryY, int lowerBoundaryY, Canvas observer) {
         super("button_pause.png", "button_pause_pointed.png",
-                0 + 16 * CanvasGameOp.DW, 0 + 20 * CanvasGameOp.DW,
-                0 + 2 * CanvasGameOp.DH, 0 + 3 * CanvasGameOp.DH);
+                leftBoundaryX, rightBoundaryX, upperBoundaryY, lowerBoundaryY, observer);
     }
 
     public void draw(Graphics g) {
-        super.draw(g, CanvasGameOp.getInstance());
+        super.draw(g, observer);
     }
 }

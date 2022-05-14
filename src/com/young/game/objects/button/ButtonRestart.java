@@ -6,13 +6,12 @@ import java.awt.*;
 
 public class ButtonRestart extends Button {
 
-    public ButtonRestart() {
+    public ButtonRestart(int leftBoundaryX, int rightBoundaryX, int upperBoundaryY, int lowerBoundaryY, Canvas observer) {
         super("button_restart.png", "button_restart_pointed.png",
-                0 + 16 * CanvasGameOp.DW, 0 + 20 * CanvasGameOp.DW,
-                0 + 2 * CanvasGameOp.DH, 0 + 3 * CanvasGameOp.DH);
+                leftBoundaryX, rightBoundaryX, upperBoundaryY, lowerBoundaryY, observer);
     }
 
     public void draw(Graphics g) {
-        super.draw(g, CanvasGameOp.getInstance());
+        super.draw(g, observer);
     }
 }

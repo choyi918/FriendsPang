@@ -8,10 +8,9 @@ public class ButtonNext extends Button {
     private int x;
     private int y;
 
-    public ButtonNext() {
+    public ButtonNext(int leftBoundaryX, int rightBoundaryX, int upperBoundaryY, int lowerBoundaryY, Canvas observer) {
         super("button_next_default.png", "button_next_pointed.png",
-                0 + 9 * CanvasGameOp.DW, 0 + 13 * CanvasGameOp.DW,
-                0 + 20 * CanvasGameOp.DH + 5 * CanvasGameOp.DH, 0 + 20 * CanvasGameOp.DH + 6 * CanvasGameOp.DH);
+                leftBoundaryX, rightBoundaryX, upperBoundaryY, lowerBoundaryY, observer);
         x = 0 + 9 * CanvasGameOp.DW;
         y = 0 + 20 * CanvasGameOp.DH + 5 * CanvasGameOp.DH;
     }
@@ -55,6 +54,6 @@ public class ButtonNext extends Button {
     }
 
     public void draw(Graphics g) {
-        super.draw(g, CanvasGameOp.getInstance());
+        super.draw(g, observer);
     }
 }

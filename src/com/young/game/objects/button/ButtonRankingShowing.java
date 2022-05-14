@@ -6,14 +6,13 @@ import java.awt.*;
 
 public class ButtonRankingShowing extends Button{
 
-    public ButtonRankingShowing() {
+    public ButtonRankingShowing(int leftBoundaryX, int rightBoundaryX, int upperBoundaryY, int lowerBoundaryY, Canvas observer) {
         super("button_ranking.png", "button_ranking_pointed.png",
-                0 + 7 * CanvasMain.DW, 0 + 15 * CanvasMain.DW,
-                0 + 17 * CanvasMain.DH, 0 + 18 * CanvasMain.DH);
+                leftBoundaryX, rightBoundaryX, upperBoundaryY, lowerBoundaryY, observer);
     }
 
     public void draw(Graphics g) {
-        super.draw(g, CanvasMain.getInstance());
+        super.draw(g, observer);
     }
 
 }
