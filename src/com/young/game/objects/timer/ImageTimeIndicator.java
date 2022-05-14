@@ -17,7 +17,7 @@ public class ImageTimeIndicator {
     static {
         image = Toolkit.getDefaultToolkit().getImage("res/images/mad_kon.png");
 //        DURATION = 30;
-        DURATION = 1;
+        DURATION = 1; // short for test
     }
 
     public ImageTimeIndicator() {

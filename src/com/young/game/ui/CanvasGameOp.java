@@ -131,6 +131,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
                     gameBoard.update();
                     bPossibleMouseEvent = true;
                 }
+
                 if (gameBoard.isFull() && isAllCompleteToMove() && !gameBoard.checkValidationBoardAndClearBoard())
                     continue;
 

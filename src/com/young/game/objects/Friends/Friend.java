@@ -23,7 +23,6 @@ public abstract class Friend {
         movingSpeed = 10;
         image = Toolkit.getDefaultToolkit().getImage(String.format("res/images/%s", imageFileName));
 
-
         int dw = CanvasGameOp.DW;
         int dh = CanvasGameOp.DH;
         int defaultX = GameBoard.DEFAULT_X;
