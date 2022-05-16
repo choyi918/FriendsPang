@@ -19,14 +19,14 @@ import java.util.Random;
 public class GameBoard {
     private int previousPoint; // for test
     private int point;
-    private Friend[][] board;
+    private Friend[][] logicBoard;
     private Friend[] latestSwappedFriends;
-    private LinkedList<Friend> linkedListOfBoard; // 보드에 만들에 만든어진 Friends 기억, 처음엔 HashSet으로 했지만 순서가 중요하다는 것을 깨닫고 ArrayList씀
+    private LinkedList<Friend> linkedListOfBoardForThreadUpdating; // 보드에 만들에 만든어진 Friends 기억, 처음엔 HashSet으로 했지만 leftBottom ~ rightTop 순서로 각 캐릭터를 update 해야하기 때문에 순서가 중요하다는 것을 깨닫고 ArrayList 사용
     private GameBoardQueue<Friend> queueOfVerifiedInitializedBoard;
 
     /* 게임보드의 Canvas 상 left - top 좌표*/
-    public static final int DEFAULT_X;
-    public static final int DEFAULT_Y;
+    public static final int DEFAULT_CANVAS_X;
+    public static final int DEFAULT_CANVAS_Y;
 
     public static final int FRIENDS_COUNT;
     public static final int BOARD_LENGTH;
@@ -34,16 +34,16 @@ public class GameBoard {
     private static GameBoard instance;
 
     static {
-        DEFAULT_X = 0 + 4 * CanvasGameOp.DW;
-        DEFAULT_Y = 0 + 4 * CanvasGameOp.DH;
+        DEFAULT_CANVAS_X = 0 + 4 * CanvasGameOp.DW;
+        DEFAULT_CANVAS_Y = 0 + 4 * CanvasGameOp.DH;
         FRIENDS_COUNT = 8;
         BOARD_LENGTH = 7;
     }
 
     private GameBoard() {
-        board = new Friend[BOARD_LENGTH][BOARD_LENGTH];
+        logicBoard = new Friend[BOARD_LENGTH][BOARD_LENGTH];
         latestSwappedFriends = new Friend[2];
-        linkedListOfBoard = new LinkedList<>();
+        linkedListOfBoardForThreadUpdating = new LinkedList<>();
         queueOfVerifiedInitializedBoard = new GameBoardQueue<>();
     }
 
@@ -54,17 +54,17 @@ public class GameBoard {
     }
 
     public static void reset() {
-        instance.board = null;
+        instance.logicBoard = null;
         instance = null;
     }
 
     /* Getters */
     public Friend getFriend(int x, int y) {
-        return board[y][x];
+        return logicBoard[y][x];
     }
 
-    public LinkedList<Friend> getLinkedListOfBoard() {
-        return linkedListOfBoard;
+    public LinkedList<Friend> getLinkedListOfBoardForThreadUpdating() {
+        return linkedListOfBoardForThreadUpdating;
     }
 
     public int getPoint() {
@@ -82,7 +82,7 @@ public class GameBoard {
         latestSwappedFriends[0] = null;
         latestSwappedFriends[1] = null;
 
-        int removedCount = remove(board);
+        int removedCount = remove(logicBoard);
         addPoints(removedCount);
 
         // for test
@@ -97,77 +97,81 @@ public class GameBoard {
         int dh = CanvasGameOp.DH;
 
         g.setColor(Color.BLACK);
-        g.fillRect(DEFAULT_X, DEFAULT_Y, 7 * 2 * dw, 7 * 2 * dh);
+        g.fillRect(DEFAULT_CANVAS_X, DEFAULT_CANVAS_Y, 7 * 2 * dw, 7 * 2 * dh);
 
         for (int y = 0; y < BOARD_LENGTH; y++)
             for (int x = 0; x < BOARD_LENGTH; x++) {
                 g.setColor(Color.WHITE);
-                g.drawRect(DEFAULT_X + x * 2 * dw, DEFAULT_Y + y * 2 * dh, 2 * dw, 2 * dh);
-                if (board[y][x] != null)
-                    board[y][x].draw(g);
+                g.drawRect(DEFAULT_CANVAS_X + x * 2 * dw, DEFAULT_CANVAS_Y + y * 2 * dh, 2 * dw, 2 * dh);
+                if (logicBoard[y][x] != null)
+                    logicBoard[y][x].draw(g);
             }
 
         g.setColor(Color.BLACK);
-        g.drawRect(DEFAULT_X, DEFAULT_Y, 7 * 2 * dw, 7 * 2 * dh);
+        g.drawRect(DEFAULT_CANVAS_X, DEFAULT_CANVAS_Y, 7 * 2 * dw, 7 * 2 * dh);
     }
 
     /*
      * game base operation
      */
     public boolean isEmptyBelow(Friend friend) {
-        return (friend.getBoardY() != BOARD_LENGTH - 1) && (board[friend.getBoardY() + 1][friend.getBoardX()] == null);
+        return (friend.getLogicBoardY() != BOARD_LENGTH - 1) && (logicBoard[friend.getLogicBoardY() + 1][friend.getLogicBoardX()] == null);
     }
 
-    public void alteredSlipDown(Friend friend) {
-        int x = friend.getBoardX();
-        int y = friend.getBoardY();
-        board[y][x] = null;
-        board[y + 1][x] = friend;
+    public void noticeSlipDownOf(Friend friend) {
+        int x = friend.getLogicBoardX();
+        int y = friend.getLogicBoardY();
+        logicBoard[y][x] = null;
+        logicBoard[y + 1][x] = friend;
     }
 
     public boolean isFull() {
         for (int y = 0; y < BOARD_LENGTH; y++) {
             for (int x = 0; x < BOARD_LENGTH; x++)
-                if (board[y][x] == null)
+                if (logicBoard[y][x] == null)
                     return false;
         }
         return true;
     }
 
-    public void fillTopLine() {
+    public void fillTopLine() { // 보드의 맨 윗 줄(1행)에 빈 곳이 있다면 캐릭터를 랜덤으로 채워넣는다.
         for (int x = 0; x < BOARD_LENGTH; x++)
-            if (board[0][x] == null) {
+            if (logicBoard[0][x] == null) {
                 Friend f = null;
 
-                if (queueOfVerifiedInitializedBoard.size() != 0)
+                if (queueOfVerifiedInitializedBoard.size() != 0) // 보드를 초기화할 때 작동하는 코드, 미리 검증된 보드를 큐에 집어 넣어 (leftBottom ~ rightTop) 하나씩 꺼낸다.
                     f = queueOfVerifiedInitializedBoard.dequeue();
-                else
+                else // 게임 중 정답처리되어 부분부분 빌때 랜덤으로 하나씩 넣음
                     f = getElementRandomly(x, 0);
 
-                board[0][x] = f;
-                linkedListOfBoard.add(f);
+                logicBoard[0][x] = f;
+                linkedListOfBoardForThreadUpdating.add(f);
             }
     }
 
     public void swap(Friend f1, Friend f2) {
-        f1.moveTo(f2);
-        f2.moveTo(f1);
+        // 화면에 보이는 Canvas 위치를 이동함
+        f1.moveToOnCanvas(f2);
+        f2.moveToOnCanvas(f1);
 
-        int x1 = f1.getBoardX();
-        int y1 = f1.getBoardY();
-        int x2 = f2.getBoardX();
-        int y2 = f2.getBoardY();
+        // 게임 로직 계산을 위한 2차원 배열인 GameBoard 위치를 이동함
+        int x1 = f1.getLogicBoardX();
+        int y1 = f1.getLogicBoardY();
+        int x2 = f2.getLogicBoardX();
+        int y2 = f2.getLogicBoardY();
 
-        Friend tmp = board[y1][x1];
-        board[y1][x1] = board[y2][x2];
-        board[y2][x2] = tmp;
+        Friend tmp = logicBoard[y1][x1];
+        logicBoard[y1][x1] = logicBoard[y2][x2];
+        logicBoard[y2][x2] = tmp;
 
-        f1.setBoardX(x2);
-        f1.setBoardY(y2);
+        // 각 캐릭터도 자신의 logic board 위치를 기억
+        f1.setLogicBoardX(x2);
+        f1.setLogicBoardY(y2);
 
-        f2.setBoardX(x1);
-        f2.setBoardY(y1);
+        f2.setLogicBoardX(x1);
+        f2.setLogicBoardY(y1);
 
+        // 역스왑을 위해 지금 swap한 캐릭터 두 개를 기억
         latestSwappedFriends[0] = f1;
         latestSwappedFriends[1] = f2;
     }
@@ -222,15 +226,15 @@ public class GameBoard {
 
         /* 제거할 객체들의 자리에 null */
         for (Friend f : removals) {
-            int x = f.getBoardX();
-            int y = f.getBoardY();
+            int x = f.getLogicBoardX();
+            int y = f.getLogicBoardY();
             board[y][x] = null;
         }
 
-        /* 옳은 코드인가? */
-        if (board == this.board) {
+        /* 옳은 코드인가? => 실전 배치 된 판 인 경우 이 조건의 코드가 실행 됨, 실전 배치 전 verifiedInitializedBoard 는 해당하지 않음*/
+        if (board == this.logicBoard) {
             for (Friend f : removals)
-                linkedListOfBoard.remove(f);
+                linkedListOfBoardForThreadUpdating.remove(f);
         }
 
         return removals.size(); // 제거한 객체의 수를 반환
@@ -248,9 +252,9 @@ public class GameBoard {
     private boolean checkFriendMovingValid() {
         Friend f1 = latestSwappedFriends[0];
         Friend f2 = latestSwappedFriends[1];
-        Point p1 = new Point(f1.getBoardX(), f1.getBoardY());
-        Point p2 = new Point(f2.getBoardX(), f2.getBoardY());
-        return isRemovableHorizontal(board, p1) || isRemovableVertical(board, p1) || isRemovableHorizontal(board, p2) || isRemovableVertical(board, p2);
+        Point p1 = new Point(f1.getLogicBoardX(), f1.getLogicBoardY());
+        Point p2 = new Point(f2.getLogicBoardX(), f2.getLogicBoardY());
+        return isRemovableHorizontal(logicBoard, p1) || isRemovableVertical(logicBoard, p1) || isRemovableHorizontal(logicBoard, p2) || isRemovableVertical(logicBoard, p2);
     }
 
     private boolean isRemovableVertical(Friend[][] board, Point p) {
@@ -336,9 +340,9 @@ public class GameBoard {
         /* board, linkedListOfBoard 초기화*/
         for (int y = 0; y < BOARD_LENGTH; y++) {
             for (int x = 0; x < BOARD_LENGTH; x++)
-                board[y][x] = null;
+                logicBoard[y][x] = null;
         }
-        linkedListOfBoard.clear();
+        linkedListOfBoardForThreadUpdating.clear();
 
         System.out.println("invalid board");
         return false;
@@ -417,7 +421,7 @@ public class GameBoard {
 
         for (int y = 0; y < BOARD_LENGTH; y++) {
             for (int x = 0; x < BOARD_LENGTH; x++) {
-                Friend f = board[y][x];
+                Friend f = logicBoard[y][x];
                 switch (f.getName()) {
                     case "Apeach":
                         deepCopyBoard[y][x] = new Apeach(x, y);
@@ -465,12 +469,12 @@ public class GameBoard {
         board[y2][x2] = tmp;
 
         Friend f1 = board[y1][x1];
-        f1.setBoardX(x1);
-        f1.setBoardY(y1);
+        f1.setLogicBoardX(x1);
+        f1.setLogicBoardY(y1);
 
         Friend f2 = board[y2][x2];
-        f2.setBoardX(x2);
-        f2.setBoardY(y2);
+        f2.setLogicBoardX(x2);
+        f2.setLogicBoardY(y2);
     }
 
     /* 3개 이상의 연속 배치가 없고, 답이 있는 보드인지 검증하여 판을 새로 갱신할 때 씀 - 1. 처음 게임을 시작할때 2. 답이 없는경우 판을 다시 갱신할 때 */
@@ -483,12 +487,12 @@ public class GameBoard {
             for (int x = 0; x < BOARD_LENGTH; x++) {
                 Friend f = verifiedBoard[BOARD_LENGTH - 1 - y][x];
                 /* 보드의 탑라인으로 boardY, canvasY, validCanvasY을 초기화 -> 죄다 */
-                f.setBoardY(0);
-                f.setBoardX(x);
-                f.setPresentCanvasX(DEFAULT_X + x * 2 * dw);
-                f.setPresentCanvasY(DEFAULT_Y);
-                f.setTargetCanvasX(DEFAULT_X + x * 2 * dw);
-                f.setTargetCanvasY(DEFAULT_Y);
+                f.setLogicBoardY(0);
+                f.setLogicBoardX(x);
+                f.setPresentCanvasX(DEFAULT_CANVAS_X + x * 2 * dw);
+                f.setPresentCanvasY(DEFAULT_CANVAS_Y);
+                f.setTargetCanvasX(DEFAULT_CANVAS_X + x * 2 * dw);
+                f.setTargetCanvasY(DEFAULT_CANVAS_Y);
                 /* bottom - left 부터 top - right 까지 queue 를 만듦 */
                 queueOfVerifiedInitializedBoard.enqueue(f);
             }
@@ -524,10 +528,10 @@ public class GameBoard {
     public void printBoardForTest() {
         for (int y = 0; y < BOARD_LENGTH; y++) {
             for (int x = 0; x < BOARD_LENGTH; x++) {
-                if (board[y][x] == null)
+                if (logicBoard[y][x] == null)
                     System.out.printf("%-8s", String.format("<null>"));
                 else
-                    System.out.printf("%-8s", String.format("[%s]", board[y][x].getName()));
+                    System.out.printf("%-8s", String.format("[%s]", logicBoard[y][x].getName()));
             }
             System.out.println();
         }

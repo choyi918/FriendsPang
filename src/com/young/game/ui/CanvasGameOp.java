@@ -23,16 +23,15 @@ public class CanvasGameOp extends Canvas implements Runnable {
     private boolean bPause;
     private boolean bRunning;
     private boolean bPossibleMouseEvent;
-    private Image imageBackground;
-    private ButtonBackMain buttonBackMain;
+    private final Image imageBackground;
+    private final ButtonBackMain buttonBackMain;
     private ButtonPause buttonPause;
     private ButtonRestart buttonRestart;
     private ButtonNext buttonNext;
-    private LabelPoint labelPoint;
-    private LabelTimer labelTimer;
-    private BoxGameEnd boxGameEnd;
-    private GameBoard gameBoard;
-    private MouseAdapterForCanvasGameOp mouseAdapterForCanvasGameOp;
+    private final LabelPoint labelPoint;
+    private final LabelTimer labelTimer;
+    private final BoxGameEnd boxGameEnd;
+    private final GameBoard gameBoard;
 
     /* Canvas size */
     private static final int WIDTH;
@@ -65,7 +64,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
         gameBoard = GameBoard.getInstance();
         imageBackground = Toolkit.getDefaultToolkit().getImage("res/images/autumn_story.png");
 
-        mouseAdapterForCanvasGameOp = new MouseAdapterForCanvasGameOp();
+        MouseAdapterForCanvasGameOp mouseAdapterForCanvasGameOp = new MouseAdapterForCanvasGameOp();
         addMouseListener(mouseAdapterForCanvasGameOp);
         addMouseMotionListener(mouseAdapterForCanvasGameOp);
 
@@ -121,12 +120,12 @@ public class CanvasGameOp extends Canvas implements Runnable {
         while (bRunning) {
             if (!labelTimer.isTimeout()) {
 
-                if (gameBoard.getLinkedListOfBoard().size() == 0)
+                if (gameBoard.getLinkedListOfBoardForThreadUpdating().size() == 0)
                     gameBoard.makeQueueOfVerifiedInitializedBoard();
 
                 gameBoard.fillTopLine();
 
-                for (Friend f : gameBoard.getLinkedListOfBoard())
+                for (Friend f : gameBoard.getLinkedListOfBoardForThreadUpdating())
                     f.update();
 
                 /* 49개 다 꽉 차고, Friends들이 다 제자리에 온전히 위치한 상태에서만 실행되도록.*/
@@ -166,8 +165,8 @@ public class CanvasGameOp extends Canvas implements Runnable {
     }
 
     private boolean isAllCompleteToMove() {
-        for (Friend f : gameBoard.getLinkedListOfBoard()) {
-            if (!f.isCompleteToMove())
+        for (Friend f : gameBoard.getLinkedListOfBoardForThreadUpdating()) {
+            if (!f.isCompleteToMoveOnCanvas())
                 return false;
         }
         return true;
@@ -194,7 +193,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
             }
 
             if (buttonPause != null && buttonPause.clickedByMouse(mouseX, mouseY)) {
-                System.out.println("Pause!!");
+//                System.out.println("Pause!!");
                 playSound("click_mouse.wav");
                 /* Game을 일시정지 하는 코드 : 마우스 안 먹게하기, 타이머 일시정지, 서브스레드에 업데이트관련 동작들 동작 ㄴ*/
                 labelTimer.stop();
@@ -203,7 +202,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
                 buttonRestart = new ButtonRestart(0 + 16 * DW, 0 + 20 * DW,
                         0 + 2 * DH, 0 + 3 * DH, CanvasGameOp.getInstance());
             } else if (buttonRestart != null && buttonRestart.clickedByMouse(mouseX, mouseY)) {
-                System.out.println("ReStart!!");
+//                System.out.println("ReStart!!");
                 playSound("click_mouse.wav");
                 labelTimer.start();
                 bPause = false;
@@ -259,11 +258,7 @@ public class CanvasGameOp extends Canvas implements Runnable {
                 return;
             if (!bPossibleMouseEvent)
                 return;
-            /*동기화문제를 해결해야할 수도 있음
-             * game 판단은 서브스레드에서
-             * 현 메서드에서 moveTo나 swap같은 경우는 메인 스레드에서 진행됨.
-             * 두 스레드간 데이터 간섭이 있는지 생각해봐야함.
-             * */
+
             bPossibleMouseEvent = false;
             releasedX  = e.getX();
             releasedY = e.getY();

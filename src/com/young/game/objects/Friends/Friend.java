@@ -9,27 +9,27 @@ public abstract class Friend {
     private String name;
     private Image image;
     private int movingSpeed;
-    private int boardX;
-    private int boardY;
+    private int logicBoardX;
+    private int logicBoardY;
     private int presentCanvasX;
     private int presentCanvasY;
     private int targetCanvasX;
     private int targetCanvasY;
 
-    public Friend(int boardX, int boardY, String name, String imageFileName) {
-        this.boardX = boardX;
-        this.boardY = boardY;
+    public Friend(int logicBoardX, int logicBoardY, String name, String imageFileName) {
+        this.logicBoardX = logicBoardX;
+        this.logicBoardY = logicBoardY;
         this.name = name;
         movingSpeed = 10;
         image = Toolkit.getDefaultToolkit().getImage(String.format("res/images/%s", imageFileName));
 
         int dw = CanvasGameOp.DW;
         int dh = CanvasGameOp.DH;
-        int defaultX = GameBoard.DEFAULT_X;
-        int defaultY = GameBoard.DEFAULT_Y;
+        int defaultX = GameBoard.DEFAULT_CANVAS_X;
+        int defaultY = GameBoard.DEFAULT_CANVAS_Y;
 
-        presentCanvasX = defaultX + boardX * 2 * dw;
-        presentCanvasY = defaultY + boardY * 2 * dh;
+        presentCanvasX = defaultX + logicBoardX * 2 * dw;
+        presentCanvasY = defaultY + logicBoardY * 2 * dh;
         targetCanvasX = presentCanvasX;
         targetCanvasY = presentCanvasY;
     }
@@ -39,21 +39,21 @@ public abstract class Friend {
         return name;
     }
 
-    public int getBoardX() {
-        return boardX;
+    public int getLogicBoardX() {
+        return logicBoardX;
     }
 
-    public int getBoardY() {
-        return boardY;
+    public int getLogicBoardY() {
+        return logicBoardY;
     }
 
     /* setters */
-    public void setBoardX(int boardX) {
-        this.boardX = boardX;
+    public void setLogicBoardX(int logicBoardX) {
+        this.logicBoardX = logicBoardX;
     }
 
-    public void setBoardY(int boardY) {
-        this.boardY = boardY;
+    public void setLogicBoardY(int logicBoardY) {
+        this.logicBoardY = logicBoardY;
     }
 
     public void setPresentCanvasX(int presentCanvasX) {
@@ -75,9 +75,9 @@ public abstract class Friend {
     /* implemented in Canvas Thread*/
     public void update() {
         if (GameBoard.getInstance().isEmptyBelow(this))
-            slipDown();
+            slipDownOnCanvas();
         else
-            move();
+            moveToTargetPositionOnePixelAtOnceOnCanvas();
     }
 
     /* for called by paint method of GameCanvas class*/
@@ -90,43 +90,43 @@ public abstract class Friend {
         g.drawImage(image, presentCanvasX, presentCanvasY, 2 * dw, 2 * dh, observer);
     }
 
-    public boolean isCompleteToMove() {
+    public boolean isCompleteToMoveOnCanvas() {
         return presentCanvasX == targetCanvasX && presentCanvasY == targetCanvasY;
     }
 
     /* for moving smoothly objects in GameCanvas */
-    public void moveTo(Friend friend) {
-        int fBoardX = friend.getBoardX();
-        int fBoardY = friend.getBoardY();
+    public void moveToOnCanvas(Friend friend) {
+        int fBoardX = friend.getLogicBoardX();
+        int fBoardY = friend.getLogicBoardY();
         int dw = CanvasGameOp.DW;
         int dh = CanvasGameOp.DH;
 
-        if ((boardY < GameBoard.BOARD_LENGTH - 1 && boardX == fBoardX && boardY + 1 == fBoardY)
-                || (boardY > 0 && boardX == fBoardX && boardY - 1 == fBoardY))
-            targetCanvasY = friend.getBoardY() * (2 * dh) + (4 * dh);
+        if ((logicBoardY < GameBoard.BOARD_LENGTH - 1 && logicBoardX == fBoardX && logicBoardY + 1 == fBoardY)
+                || (logicBoardY > 0 && logicBoardX == fBoardX && logicBoardY - 1 == fBoardY))
+            targetCanvasY = friend.getLogicBoardY() * (2 * dh) + (4 * dh);
 //            validCanvasY = friend.getCanvasY();
-        else if ((boardX < GameBoard.BOARD_LENGTH - 1 && boardY == fBoardY && boardX + 1 == fBoardX)
-                || (boardX > 0 && boardY == fBoardY && boardX - 1 == fBoardX))
-            targetCanvasX = friend.getBoardX() * (2 * dw) + (4 * dw);
+        else if ((logicBoardX < GameBoard.BOARD_LENGTH - 1 && logicBoardY == fBoardY && logicBoardX + 1 == fBoardX)
+                || (logicBoardX > 0 && logicBoardY == fBoardY && logicBoardX - 1 == fBoardX))
+            targetCanvasX = friend.getLogicBoardX() * (2 * dw) + (4 * dw);
 //            validCanvasX = friend.getCanvasX(); // -> 버그 : 연속적으로 마우스이벤트에 의한 교환이 일어났을 때 화면상으로 돌이 제자리를 찾아 그려지지 않음
     }
 
-    private void slipDown() {
+    private void slipDownOnCanvas() {
         GameBoard inBoard = GameBoard.getInstance();
-        int defaultY = GameBoard.DEFAULT_Y;
+        int defaultY = GameBoard.DEFAULT_CANVAS_Y;
         int dh = CanvasGameOp.DH;
 
         for (int i = 0; i < movingSpeed; i++) {
             presentCanvasY += 1;
-            if (presentCanvasY == defaultY + (boardY + 1) * 2 * dh) {
-                inBoard.alteredSlipDown(this);
-                this.boardY += 1;
+            if (presentCanvasY == defaultY + (logicBoardY + 1) * 2 * dh) {
+                inBoard.noticeSlipDownOf(this);
+                this.logicBoardY += 1;
                 targetCanvasY = presentCanvasY;
             }
         }
     }
 
-    private void move() {
+    private void moveToTargetPositionOnePixelAtOnceOnCanvas() {
         for (int i = 0; i < movingSpeed; i++) {
             if (presentCanvasX < targetCanvasX)
                 presentCanvasX += 1;
