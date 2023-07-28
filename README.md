@@ -5,8 +5,6 @@
 - 프로젝트 기간 : 2021.09.4 ~ 20201.09.11
 - 프로그래밍 연습을 위해 인기 모바일 게임 애니팡 스타일의 게임을 카카오 캐릭터를 사용해 구현하였습니다.
 
-[https://github.com/choyi918/Java-mini-game-project.git](https://github.com/choyi918/Java-mini-game-project.git)
-
 ### 사용 기술
 
 - 순수 Java, Java AWT
@@ -15,48 +13,70 @@
 
 - **메인 화면 입니다.**
     1. “게임 시작”, “랭킹 보기”, “나가기” 세 종류의 버튼이 있습니다.
-        
-        ![인트로화면짤.gif](Project%20FriendsPang%20%E1%84%89%E1%85%A9%E1%84%80%E1%85%A2%20eedaaed9ec714d5494fa6f2f0a5888ab/%E1%84%8B%E1%85%B5%E1%86%AB%E1%84%90%E1%85%B3%E1%84%85%E1%85%A9%E1%84%92%E1%85%AA%E1%84%86%E1%85%A7%E1%86%AB%E1%84%8D%E1%85%A1%E1%86%AF.gif)
+
+<br>
+<img src="./readme_images/intro.gif" width="30%" height="30%" title="" alt=""></img>
+<br>
         
     
 - **게임 화면 입니다.**
     1. “Game Start”를 누르면 게임이 바로 시작됩니다. 빈 보드판에서 카카오 캐릭터들이 채워지기 시작합니다.
         
-        ![게임start.gif](Project%20FriendsPang%20%E1%84%89%E1%85%A9%E1%84%80%E1%85%A2%20eedaaed9ec714d5494fa6f2f0a5888ab/%E1%84%80%E1%85%A6%E1%84%8B%E1%85%B5%E1%86%B7start.gif)
+<br>
+<img src="./readme_images/게임start.gif" width="30%" height="30%" title="" alt=""></img>
+<br>
         
-    2. 같은 종류의 캐릭터가 3개 이상 일렬로 배치된다면 없어지고, 판이 다시 채워지며, 점수를 얻습니다.
+    3. 같은 종류의 캐릭터가 3개 이상 일렬로 배치된다면 없어지고, 판이 다시 채워지며, 점수를 얻습니다.
+
+<br>
+<img src="./readme_images/타이머-노란색.gif" width="30%" height="30%" title="" alt=""></img>
+<br>
         
-        ![타이머-노란색.gif](Project%20FriendsPang%20%E1%84%89%E1%85%A9%E1%84%80%E1%85%A2%20eedaaed9ec714d5494fa6f2f0a5888ab/%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%86%E1%85%A5-%E1%84%82%E1%85%A9%E1%84%85%E1%85%A1%E1%86%AB%E1%84%89%E1%85%A2%E1%86%A8.gif)
+    5. 같은 종류의 캐릭터가 3개 이상 배치를 할 수 없다면 캐릭터 자리 교환이 이루어 지지 않습니다.
+
+<br>
+<img src="./readme_images/reverse_swap.gif" width="30%" height="30%" title="" alt=""></img>
+<br>
         
-    3. 같은 종류의 캐릭터가 3개 이상 배치를 할 수 없다면 캐릭터 자리 교환이 이루어 지지 않습니다.
+    6. 타이머 동작 입니다. 타임 아웃이 다 다를 수록 색깔이 조급하게 변합니다.
+    
+<br>
+<img src="./readme_images/타이머.gif" width="30%" height="30%" title="" alt=""></img>
+<br>
         
-        ![캐릭터돌-역스왑.gif](Project%20FriendsPang%20%E1%84%89%E1%85%A9%E1%84%80%E1%85%A2%20eedaaed9ec714d5494fa6f2f0a5888ab/%E1%84%8F%E1%85%A2%E1%84%85%E1%85%B5%E1%86%A8%E1%84%90%E1%85%A5%E1%84%83%E1%85%A9%E1%86%AF-%E1%84%8B%E1%85%A7%E1%86%A8%E1%84%89%E1%85%B3%E1%84%8B%E1%85%AA%E1%86%B8.gif)
+    7. 더 이상 정답이 없을 때, 판이 새롭게 갱신되어 내려옵니다.
+
+<br>
+<img src="./readme_images/게임리셋2.gif" width="30%" height="30%" title="" alt=""></img>
+<br>
         
-    4. 타이머 동작 입니다. 타임 아웃이 다 다를 수록 색깔이 조급하게 변합니다.
+    8. 점수판 동작 입니다.
+
+<br>
+<img src="./readme_images/점수판.gif" width="30%" height="30%" title="" alt=""></img>
+<br>
         
-        ![타이머.gif](Project%20FriendsPang%20%E1%84%89%E1%85%A9%E1%84%80%E1%85%A2%20eedaaed9ec714d5494fa6f2f0a5888ab/%E1%84%90%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%86%E1%85%A5.gif)
+    9. 게임 아웃시 ‘끝’이라는 큼지막한 글자가 내려오고 랭킹등록을 할 수 있도록 ‘next’버튼이 올려옵니다.
         
-    5. 더 이상 정답이 없을 때, 판이 새롭게 갱신되어 내려옵니다.
-        
-        ![게임리셋2.gif](Project%20FriendsPang%20%E1%84%89%E1%85%A9%E1%84%80%E1%85%A2%20eedaaed9ec714d5494fa6f2f0a5888ab/%E1%84%80%E1%85%A6%E1%84%8B%E1%85%B5%E1%86%B7%E1%84%85%E1%85%B5%E1%84%89%E1%85%A6%E1%86%BA2.gif)
-        
-    6. 점수판 동작 입니다.
-        
-        ![점수판.gif](Project%20FriendsPang%20%E1%84%89%E1%85%A9%E1%84%80%E1%85%A2%20eedaaed9ec714d5494fa6f2f0a5888ab/%E1%84%8C%E1%85%A5%E1%86%B7%E1%84%89%E1%85%AE%E1%84%91%E1%85%A1%E1%86%AB.gif)
-        
-    7. 게임 아웃시 ‘끝’이라는 큼지막한 글자가 내려오고 랭킹등록을 할 수 있도록 ‘next’버튼이 올려옵니다.
-        
-        ![게임끝.gif](Project%20FriendsPang%20%E1%84%89%E1%85%A9%E1%84%80%E1%85%A2%20eedaaed9ec714d5494fa6f2f0a5888ab/%E1%84%80%E1%85%A6%E1%84%8B%E1%85%B5%E1%86%B7%E1%84%81%E1%85%B3%E1%87%80.gif)
+<br>
+<img src="./readme_images/게임끝.gif" width="30%" height="30%" title="" alt=""></img>
+<br>
         
 - **랭킹관련 화면입니다.**
     1. 랭킹 등록 화면 입니다.
         
-        ![랭킹입력.gif](Project%20FriendsPang%20%E1%84%89%E1%85%A9%E1%84%80%E1%85%A2%20eedaaed9ec714d5494fa6f2f0a5888ab/%E1%84%85%E1%85%A2%E1%86%BC%E1%84%8F%E1%85%B5%E1%86%BC%E1%84%8B%E1%85%B5%E1%86%B8%E1%84%85%E1%85%A7%E1%86%A8.gif)
+
+<br>
+<img src="./readme_images/랭킹입력.gif" width="30%" height="30%" title="" alt=""></img>
+<br>
         
-    2. 랭킹을 볼 수 있는 화면 입니다.
+    3. 랭킹을 볼 수 있는 화면 입니다.
         
-        ![랭킹화면.gif](Project%20FriendsPang%20%E1%84%89%E1%85%A9%E1%84%80%E1%85%A2%20eedaaed9ec714d5494fa6f2f0a5888ab/%E1%84%85%E1%85%A2%E1%86%BC%E1%84%8F%E1%85%B5%E1%86%BC%E1%84%92%E1%85%AA%E1%84%86%E1%85%A7%E1%86%AB.gif)
-        
+
+<br>
+<img src="./readme_images/랭킹화면.gif" width="30%" height="30%" title="" alt=""></img>
+<br>
+
 - **게임 플레이 전체영상 입니다.(화살표를 누르세요)**
     
     [화면 기록 2022-05-09 오전 10.23.42.mov](Project%20FriendsPang%20%E1%84%89%E1%85%A9%E1%84%80%E1%85%A2%20eedaaed9ec714d5494fa6f2f0a5888ab/%E1%84%92%E1%85%AA%E1%84%86%E1%85%A7%E1%86%AB_%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%E1%86%A8_2022-05-09_%E1%84%8B%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%AB_10.23.42.mov)
@@ -65,8 +85,10 @@
 ### 프렌즈팡의 프로그램 플로우
 
 - **화면 이동 플로우 입니다.**
-    
-    ![Untitled](Project%20FriendsPang%20%E1%84%89%E1%85%A9%E1%84%80%E1%85%A2%20eedaaed9ec714d5494fa6f2f0a5888ab/Untitled.png)
+
+<br>
+<img src="./readme_images/Untitled.png" width="30%" height="30%" title="" alt=""></img>
+<br>
     
 - **게임 로직 플로우**
     1. “Game Start”를 누르면 게임이 시작되고 텅 빈 게임보드에 랜덤으로 프렌즈 캐릭터가 채워집니다.
